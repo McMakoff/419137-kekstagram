@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Lina Vojhanskaya](https://up.htmlacademy.ru/javascript/12/user/419137).
-* Наставник: `Неизвестно`.
+* Наставник: [Анна Тюрина](https://htmlacademy.ru/profile/id549147).
 
 ---
 
