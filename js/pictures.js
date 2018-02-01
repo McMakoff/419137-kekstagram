@@ -45,3 +45,17 @@ for (i = 0; i < PHOTO_NUMBER; i++) {
   fragment.appendChild(renderPicture(pictures[i]));
 }
 pictureList.appendChild(fragment);
+
+var renderGallery = function (photo) {
+  var photoElement = galleryPhoto.content;
+
+  galleryPhoto.querySelector('.gallery-overlay-image').setAttribute('src', photo.url);
+  galleryPhoto.querySelector('.likes-count').textContent = photo.likes;
+  galleryPhoto.querySelector('.comments-count').textContent = photo.comments;
+
+  return photoElement;
+};
+
+var galleryFragment = document.createDocumentFragment();
+galleryFragment.appendChild(renderGallery(pictures[generateRandom(pictures.length)]));
+galleryPhoto.appendChild(galleryFragment);
