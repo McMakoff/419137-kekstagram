@@ -12,8 +12,8 @@ var galleryCover = document.querySelector('.gallery-overlay');
 var pictureTemplate = document.querySelector('#picture-template').content;
 var pictureList = document.querySelector('.pictures');
 
-var generateRandom = function (sum) {
-  return Math.floor(Math.random() * sum);
+var generateRandom = function (topRange) {
+  return Math.floor(Math.random() * topRange);
 };
 
 var photo = [];
