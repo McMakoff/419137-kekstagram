@@ -7,8 +7,8 @@ var COMMENTS = ['Всё отлично!',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var PHOTO_NUMBER = 25;
-var COMMENTS_NUMBER = 186;
-var MIN_COMMENTS_NUMBER = 15;
+var LIKES_NUMBER = 186;
+var MIN_LIKES_NUMBER = 15;
 
 var galleryCover = document.querySelector('.gallery-overlay');
 var pictureTemplate = document.querySelector('#picture-template').content;
@@ -37,7 +37,7 @@ var DesignPicture = function (number, likes, comments) {
 var pictures = [];
 
 for (var i = 0; i < PHOTO_NUMBER; i++) {
-  pictures[i] = new DesignPicture(photo[i].toString(), generateRandom(COMMENTS_NUMBER) + MIN_COMMENTS_NUMBER, generateRandom(COMMENTS.length + 1));
+  pictures[i] = new DesignPicture(photo[i].toString(), generateRandom(LIKES_NUMBER) + MIN_LIKES_NUMBER, generateRandom(COMMENTS.length + 1));
 }
 
 var renderPicture = function (picture) {
