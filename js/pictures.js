@@ -1,22 +1,30 @@
 'use strict';
 
 var COMMENTS = ['Всё отлично!',
-'В целом всё неплохо. Но не всё.',
-'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
+  'В целом всё неплохо. Но не всё.',
+  'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
+  'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
+  'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
+  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var PHOTO_NUMBER = 25;
 
-var galleryPhoto = document.querySelector('.gallery-overlay');
-galleryPhoto.classList.remove('hidden');
-
+var galleryCover = document.querySelector('.gallery-overlay');
 var pictureTemplate = document.querySelector('#picture-template').content;
 var pictureList = document.querySelector('.pictures');
 
 var generateRandom = function (sum) {
   return Math.floor(Math.random() * sum);
 };
+
+var photo = [];
+
+while (photo.length < PHOTO_NUMBER) {
+  var randomNumber = generateRandom(PHOTO_NUMBER) + 1;
+
+  if (photo.indexOf(randomNumber) === -1) {
+    photo.push(randomNumber);
+  }
+}
 
 var DesignPicture = function (number, likes, comments) {
   this.url = 'photos/' + number + '.jpg';
@@ -27,7 +35,7 @@ var DesignPicture = function (number, likes, comments) {
 var pictures = [];
 
 for (var i = 0; i < PHOTO_NUMBER; i++) {
-  pictures[i] = new DesignPicture((i + 1).toString(), generateRandom(186) + 15, generateRandom(COMMENTS.length + 1));
+  pictures[i] = new DesignPicture(photo[i].toString(), generateRandom(186) + 15, generateRandom(COMMENTS.length + 1));
 }
 
 var renderPicture = function (picture) {
@@ -46,16 +54,18 @@ for (i = 0; i < PHOTO_NUMBER; i++) {
 }
 pictureList.appendChild(fragment);
 
-var renderGallery = function (photo) {
-  var photoElement = galleryPhoto.content;
+galleryCover.classList.remove('hidden');
 
-  galleryPhoto.querySelector('.gallery-overlay-image').setAttribute('src', photo.url);
-  galleryPhoto.querySelector('.likes-count').textContent = photo.likes;
-  galleryPhoto.querySelector('.comments-count').textContent = photo.comments;
+var renderGallery = function (cover) {
+  var coverElement = galleryCover.content;
 
-  return photoElement;
+  galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', cover.url);
+  galleryCover.querySelector('.likes-count').textContent = cover.likes;
+  galleryCover.querySelector('.comments-count').textContent = cover.comments;
+
+  return coverElement;
 };
 
 var galleryFragment = document.createDocumentFragment();
-galleryFragment.appendChild(renderGallery(pictures[generateRandom(pictures.length)]));
-galleryPhoto.appendChild(galleryFragment);
+galleryFragment.appendChild(renderGallery(pictures[0]));
+galleryCover.appendChild(galleryFragment);
