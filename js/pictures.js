@@ -28,10 +28,10 @@ while (photo.length < PHOTO_NUMBER) {
   }
 }
 
-var DesignPicture = function (number, likes, comments) {
-  this.url = 'photos/' + number + '.jpg';
-  this.likes = likes;
-  this.comments = comments;
+var DesignPicture = function (url, like, comment) {
+  this.url = 'photos/' + url + '.jpg';
+  this.likes = like;
+  this.comments = comment;
 };
 
 var pictures = [];
@@ -56,18 +56,8 @@ for (i = 0; i < PHOTO_NUMBER; i++) {
 }
 pictureList.appendChild(fragment);
 
+galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', pictures[0].url);
+galleryCover.querySelector('.likes-count').textContent = pictures[0].likes;
+galleryCover.querySelector('.comments-count').textContent = pictures[0].comments;
+
 galleryCover.classList.remove('hidden');
-
-var renderGallery = function (cover) {
-  var coverElement = galleryCover.content;
-
-  galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', cover.url);
-  galleryCover.querySelector('.likes-count').textContent = cover.likes;
-  galleryCover.querySelector('.comments-count').textContent = cover.comments;
-
-  return coverElement;
-};
-
-var galleryFragment = document.createDocumentFragment();
-galleryFragment.appendChild(renderGallery(pictures[0]));
-galleryCover.appendChild(galleryFragment);
