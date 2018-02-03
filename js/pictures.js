@@ -23,6 +23,19 @@ var generateRandom = function (topRange, bottomRange) {
   return chance;
 };
 
+var commentsNew = [];
+
+while (commentsNew.length < PHOTO_NUMBER) {
+  var l = Math.floor(Math.random() * COMMENTS.length);
+  var k = Math.floor(Math.random() * COMMENTS.length);
+
+  if (l !== k) {
+    commentsNew.push(COMMENTS[l] + COMMENTS[k])
+  } else {
+    commentsNew.push(COMMENTS[l]);
+  }
+}
+
 var photos = [];
 
 while (photos.length < PHOTO_NUMBER) {
@@ -42,7 +55,8 @@ var DesignPicture = function (url, like, comment) {
 var pictures = [];
 
 for (var i = 0; i < PHOTO_NUMBER; i++) {
-  pictures[i] = new DesignPicture(photos[i].toString(), generateRandom(LIKES_NUMBER, MIN_LIKES_NUMBER), generateRandom(COMMENTS.length, MIN_COMMENTS_NUMBER));
+  pictures[i] = new DesignPicture(photos[i].toString(), generateRandom(LIKES_NUMBER, MIN_LIKES_NUMBER),
+    commentsNew.slice(generateRandom(commentsNew.length, 0)));
 }
 
 var renderPicture = function (picture) {
@@ -50,7 +64,7 @@ var renderPicture = function (picture) {
 
   pictureElement.querySelector('.picture img').setAttribute('src', picture.url);
   pictureElement.querySelector('.picture-likes').textContent = picture.likes;
-  pictureElement.querySelector('.picture-comments').textContent = picture.comments;
+  pictureElement.querySelector('.picture-comments').textContent = picture.comments.length;
 
   return pictureElement;
 };
@@ -63,6 +77,6 @@ pictureList.appendChild(fragment);
 
 galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', pictures[0].url);
 galleryCover.querySelector('.likes-count').textContent = pictures[0].likes;
-galleryCover.querySelector('.comments-count').textContent = pictures[0].comments;
+galleryCover.querySelector('.comments-count').textContent = pictures[0].comments.length;
 
-galleryCover.classList.remove('hidden');
+// galleryCover.classList.remove('hidden');
