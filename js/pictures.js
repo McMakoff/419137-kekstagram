@@ -23,17 +23,22 @@ var generateRandom = function (topRange, bottomRange) {
   return chance;
 };
 
-var commentsNew = [];
+var DesignComments = function (range) {
+  var commentsNew = [];
 
-while (commentsNew.length < PHOTO_NUMBER) {
-  var l = Math.floor(Math.random() * COMMENTS.length);
-  var k = Math.floor(Math.random() * COMMENTS.length);
+  while (commentsNew.length < range) {
+    var l = Math.floor(Math.random() * COMMENTS.length);
+    var k = Math.floor(Math.random() * COMMENTS.length);
 
-  if (l !== k) {
-    commentsNew.push(COMMENTS[l] + COMMENTS[k])
-  } else {
-    commentsNew.push(COMMENTS[l]);
+    if (l !== k) {
+      commentsNew.push(COMMENTS[l] + ' ' + COMMENTS[k]);
+    } else {
+      commentsNew.push(COMMENTS[l]);
+    }
   }
+
+  console.log(commentsNew);
+  return commentsNew;
 }
 
 var photos = [];
@@ -56,7 +61,7 @@ var pictures = [];
 
 for (var i = 0; i < PHOTO_NUMBER; i++) {
   pictures[i] = new DesignPicture(photos[i].toString(), generateRandom(LIKES_NUMBER, MIN_LIKES_NUMBER),
-    commentsNew.slice(generateRandom(commentsNew.length, 0)));
+    DesignComments(generateRandom(10, 0)));
 }
 
 var renderPicture = function (picture) {
