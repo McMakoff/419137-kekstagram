@@ -102,3 +102,23 @@ uploadCancel.addEventListener('click', function () {
   uploadOverlay.classList.add('hidden');
   uploadFile.setAttribute('value', '');
 });
+
+//Определение уровня насыщенности.
+
+var effectLevel = document.querySelector('.upload-effect-level');
+var effectPin = document.querySelector('.upload-effect-level-pin');
+var effectValue = document.querySelector('.upload-effect-level-value');
+
+var startPin = 420;
+var endPin = 880;
+var sizePin = endPin - startPin;
+
+// хром, сепия           (valuePin / sizePin);
+// марвин                (valuePin / sizePin) * 100;
+// фобос, зной           (valuePin / sizePin) * 3;
+
+effectPin.addEventListener('mouseup', function () {
+  var valuePin = event.clientX - startPin;
+  effectValue.setAttribute('value', (valuePin / sizePin).toFixed(2));
+  alert(valuePin);
+});
