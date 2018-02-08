@@ -82,8 +82,23 @@ for (i = 0; i < PHOTO_NUMBER; i++) {
 }
 pictureList.appendChild(fragment);
 
-galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', pictures[0].url);
-galleryCover.querySelector('.likes-count').textContent = pictures[0].likes;
-galleryCover.querySelector('.comments-count').textContent = pictures[0].comments.length;
+// galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', pictures[0].url);
+// galleryCover.querySelector('.likes-count').textContent = pictures[0].likes;
+// galleryCover.querySelector('.comments-count').textContent = pictures[0].comments.length;
 
-galleryCover.classList.remove('hidden');
+// galleryCover.classList.remove('hidden');
+
+//Открытие и закрытие формы редактирования изображения.
+
+var uploadOverlay = document.querySelector('.upload-overlay');
+var uploadFile = document.querySelector('#upload-file');
+var uploadCancel = document.querySelector('#upload-cancel');
+
+uploadFile.addEventListener('change', function () {
+  uploadOverlay.classList.remove('hidden');
+});
+
+uploadCancel.addEventListener('click', function () {
+  uploadOverlay.classList.add('hidden');
+  uploadFile.setAttribute('value', '');
+});
