@@ -82,13 +82,7 @@ for (i = 0; i < PHOTO_NUMBER; i++) {
 }
 pictureList.appendChild(fragment);
 
-// galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', pictures[0].url);
-// galleryCover.querySelector('.likes-count').textContent = pictures[0].likes;
-// galleryCover.querySelector('.comments-count').textContent = pictures[0].comments.length;
-
-// galleryCover.classList.remove('hidden');
-
-//Открытие и закрытие формы редактирования изображения.
+// Открытие и закрытие формы редактирования изображения.
 
 var uploadOverlay = document.querySelector('.upload-overlay');
 var uploadFile = document.querySelector('#upload-file');
@@ -103,7 +97,7 @@ uploadCancel.addEventListener('click', function () {
   uploadFile.setAttribute('value', '');
 });
 
-//Определение уровня насыщенности.
+// Определение уровня насыщенности.
 
 var effectLevel = document.querySelector('.upload-effect-level');
 var effectPin = document.querySelector('.upload-effect-level-pin');
@@ -120,5 +114,27 @@ var sizePin = endPin - startPin;
 effectPin.addEventListener('mouseup', function () {
   var valuePin = event.clientX - startPin;
   effectValue.setAttribute('value', (valuePin / sizePin).toFixed(2));
-  alert(valuePin);
 });
+
+// Показ изображения в полноэкранном режиме.
+
+var pictureNode = document.querySelectorAll('.picture img');
+console.log(pictureNode);
+
+var galleryOverlay = function (url) {
+  galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', pictures[url].url);
+  galleryCover.querySelector('.likes-count').textContent = pictures[url].likes;
+  galleryCover.querySelector('.comments-count').textContent = pictures[url].comments.length;
+
+  galleryCover.classList.remove('hidden');
+};
+
+var clickHandler = function (evt) {
+  console.log(evt);
+  galleryOverlay(5);
+  alert('ура');
+};
+
+for (i = 0; i < pictureNode.length; i++) {
+  pictureNode[i].addEventListener('click', clickHandler, true);
+}
