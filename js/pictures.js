@@ -130,6 +130,8 @@ var galleryOverlay = function (url) {
 };
 
 var clickHandler = function (evt) {
+  var src = this.getAttribute('src');
+  console.log(src);
   galleryOverlay(5);
   evt.preventDefault();
   evt.stopPropagation();
@@ -152,5 +154,4 @@ elem.addEventListener('click', handler, false)
 
 elem.addEventListener('click', function() { alert('А я сработало..') }, false);
 */
-
 
