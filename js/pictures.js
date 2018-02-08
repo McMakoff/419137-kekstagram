@@ -130,11 +130,27 @@ var galleryOverlay = function (url) {
 };
 
 var clickHandler = function (evt) {
-  console.log(evt);
   galleryOverlay(5);
-  alert('ура');
+  evt.preventDefault();
+  evt.stopPropagation();
+  return false;
 };
 
 for (i = 0; i < pictureNode.length; i++) {
-  pictureNode[i].addEventListener('click', clickHandler, true);
+  pictureNode[i].addEventListener('click', clickHandler, false);
 }
+
+/* elem = document.getElementById('TestStop')
+
+function handler(e) {
+  e.preventDefault() // браузер - стоять
+  e.stopPropagation() // событие - не всплывать
+  return false // и вообще, мне больше ничего не надо
+}
+
+elem.addEventListener('click', handler, false)
+
+elem.addEventListener('click', function() { alert('А я сработало..') }, false);
+*/
+
+
