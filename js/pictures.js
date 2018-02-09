@@ -118,21 +118,22 @@ effectPin.addEventListener('mouseup', function () {
 
 // Показ изображения в полноэкранном режиме.
 
-var pictureNode = document.querySelectorAll('.picture img');
-console.log(pictureNode);
+var pictureNode = document.querySelectorAll('.picture');
 
-var galleryOverlay = function (url) {
-  galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', pictures[url].url);
-  galleryCover.querySelector('.likes-count').textContent = pictures[url].likes;
-  galleryCover.querySelector('.comments-count').textContent = pictures[url].comments.length;
+var galleryOverlay = function (src, comment, like) {
+  galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', src);
+  galleryCover.querySelector('.comments-count').textContent = comment;
+  galleryCover.querySelector('.likes-count').textContent = like;
 
   galleryCover.classList.remove('hidden');
 };
 
 var clickHandler = function (evt) {
-  var src = this.getAttribute('src');
-  console.log(src);
-  galleryOverlay(5);
+  var valueSrc = this.querySelector('img').getAttribute('src');
+  var valueComment = this.querySelector('.picture-comments').textContent;
+  var valueLike = this.querySelector('.picture-likes').textContent;
+
+  galleryOverlay(valueSrc, valueComment, valueLike);
   evt.preventDefault();
   evt.stopPropagation();
   return false;
@@ -142,7 +143,9 @@ for (i = 0; i < pictureNode.length; i++) {
   pictureNode[i].addEventListener('click', clickHandler, false);
 }
 
-/* elem = document.getElementById('TestStop')
+/* код, в который я подсматривала.
+
+elem = document.getElementById('TestStop')
 
 function handler(e) {
   e.preventDefault() // браузер - стоять
@@ -154,4 +157,3 @@ elem.addEventListener('click', handler, false)
 
 elem.addEventListener('click', function() { alert('А я сработало..') }, false);
 */
-
