@@ -128,12 +128,13 @@ var effectNode = document.querySelectorAll('.upload-effect-preview');
 var imagePreview = document.querySelector('.effect-image-preview');
 console.log(effectNode);
 
-var j = effectNode[1].parentElement.previousElementSibling;
-var s = j.getAttribute('value');
-imagePreview.classList.add('effect-' + s);
+
 
 var clickHandlerEffect = function (evt) {
-
+  var j = this.parentElement.previousElementSibling;
+  var s = j.getAttribute('value');
+  imagePreview.classList.remove('effect-[...]');
+  imagePreview.classList.add('effect-' + s);
 
   // galleryOverlay(valueSrc, valueComment, valueLike);
   evt.preventDefault();
