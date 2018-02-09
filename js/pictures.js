@@ -98,6 +98,7 @@ uploadCancel.addEventListener('click', function () {
 });
 
 // Определение уровня насыщенности.
+
 var SIZE_CONTROL = 455;
 var SIZE_PIN = 9;
 var sizeWindow = document.documentElement.clientWidth;
@@ -120,6 +121,29 @@ boxEffectPin.addEventListener('mouseup', function () {
   inputEffectValue.setAttribute('value', Math.round((valuePin + SIZE_PIN) / SIZE_CONTROL * 100));
   lineEffectValue.style.width = (inputEffectValue.getAttribute('value')) + '%';
 });
+
+// Наложение эффекта на изображение.
+
+var effectNode = document.querySelectorAll('.upload-effect-preview');
+var imagePreview = document.querySelector('.effect-image-preview');
+console.log(effectNode);
+
+var j = effectNode[1].parentElement.previousElementSibling;
+var s = j.getAttribute('value');
+imagePreview.classList.add('effect-' + s);
+
+var clickHandlerEffect = function (evt) {
+
+
+  // galleryOverlay(valueSrc, valueComment, valueLike);
+  evt.preventDefault();
+  evt.stopPropagation();
+  return false;
+};
+
+for (i = 0; i < effectNode.length; i++) {
+  effectNode[i].addEventListener('click', clickHandlerEffect, false);
+}
 
 // Показ изображения в полноэкранном режиме.
 
