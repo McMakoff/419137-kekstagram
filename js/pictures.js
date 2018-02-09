@@ -100,10 +100,14 @@ uploadCancel.addEventListener('click', function () {
 // Определение уровня насыщенности.
 
 var effectLevel = document.querySelector('.upload-effect-level');
-var effectPin = document.querySelector('.upload-effect-level-pin');
-var effectValue = document.querySelector('.upload-effect-level-value');
+var boxEffectPin = effectLevel.querySelector('.upload-effect-level-pin');
+var lineEffectValue = effectLevel.querySelector('.upload-effect-level-val');
+var inputEffectValue = effectLevel.querySelector('.upload-effect-level-value');
 
-var startPin = 420;
+var inputValue = inputEffectValue.getAttribute('value');
+lineEffectValue.style.width = inputValue + '%';
+
+var startPin = 430;
 var endPin = 880;
 var sizePin = endPin - startPin;
 
@@ -111,9 +115,10 @@ var sizePin = endPin - startPin;
 // марвин                (valuePin / sizePin) * 100;
 // фобос, зной           (valuePin / sizePin) * 3;
 
-effectPin.addEventListener('mouseup', function () {
+boxEffectPin.addEventListener('mouseup', function () {
   var valuePin = event.clientX - startPin;
-  effectValue.setAttribute('value', (valuePin / sizePin).toFixed(2));
+  inputEffectValue.setAttribute('value', Math.round((valuePin / sizePin) * 100));
+  lineEffectValue.style.width = (inputEffectValue.getAttribute('value')) + '%';
 });
 
 // Показ изображения в полноэкранном режиме.
