@@ -98,6 +98,10 @@ uploadCancel.addEventListener('click', function () {
 });
 
 // Определение уровня насыщенности.
+var SIZE_CONTROL = 455;
+var SIZE_PIN = 9;
+var sizeWindow = document.documentElement.clientWidth;
+var startPin = (sizeWindow - SIZE_CONTROL) / 2;
 
 var effectLevel = document.querySelector('.upload-effect-level');
 var boxEffectPin = effectLevel.querySelector('.upload-effect-level-pin');
@@ -107,17 +111,13 @@ var inputEffectValue = effectLevel.querySelector('.upload-effect-level-value');
 var inputValue = inputEffectValue.getAttribute('value');
 lineEffectValue.style.width = inputValue + '%';
 
-var startPin = 430;
-var endPin = 880;
-var sizePin = endPin - startPin;
-
-// хром, сепия           (valuePin / sizePin);
-// марвин                (valuePin / sizePin) * 100;
-// фобос, зной           (valuePin / sizePin) * 3;
+// хром, сепия           (valuePin / SIZE_CONTROL);
+// марвин                (valuePin / SIZE_CONTROL) * 100;
+// фобос, зной           (valuePin / SIZE_CONTROL) * 3;
 
 boxEffectPin.addEventListener('mouseup', function () {
   var valuePin = event.clientX - startPin;
-  inputEffectValue.setAttribute('value', Math.round((valuePin / sizePin) * 100));
+  inputEffectValue.setAttribute('value', Math.round((valuePin + SIZE_PIN) / SIZE_CONTROL * 100));
   lineEffectValue.style.width = (inputEffectValue.getAttribute('value')) + '%';
 });
 
