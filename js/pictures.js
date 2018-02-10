@@ -106,41 +106,64 @@ var startPin = (sizeWindow - SIZE_CONTROL) / 2;
 
 var effectLevel = document.querySelector('.upload-effect-level');
 var boxEffectPin = effectLevel.querySelector('.upload-effect-level-pin');
-var lineEffectValue = effectLevel.querySelector('.upload-effect-level-val');
-var inputEffectValue = effectLevel.querySelector('.upload-effect-level-value');
+var valueEffectLine = effectLevel.querySelector('.upload-effect-level-val');
+var valueEffectInput = effectLevel.querySelector('.upload-effect-level-value');
 
-var inputValue = inputEffectValue.getAttribute('value');
-lineEffectValue.style.width = inputValue + '%';
+boxEffectPin.addEventListener('mouseup', function () {
+  var valuePin = event.clientX - startPin;
+  valueEffectInput.setAttribute('value', Math.round((valuePin + SIZE_PIN) / SIZE_CONTROL * 100));
+  valueEffectLine.style.width = (valueEffectInput.getAttribute('value')) + '%';
+});
 
+// Обновление css стилей
+
+
+
+// 'effect-chrome', 'effect-sepia', 'effect-marvin', 'effect-phobos', 'effect-heat'document.images[h].style.filter = "grayscale(0)";
 // хром, сепия           (valuePin / SIZE_CONTROL);
 // марвин                (valuePin / SIZE_CONTROL) * 100;
 // фобос, зной           (valuePin / SIZE_CONTROL) * 3;
 
-boxEffectPin.addEventListener('mouseup', function () {
-  var valuePin = event.clientX - startPin;
-  inputEffectValue.setAttribute('value', Math.round((valuePin + SIZE_PIN) / SIZE_CONTROL * 100));
-  lineEffectValue.style.width = (inputEffectValue.getAttribute('value')) + '%';
-});
+
 
 // Наложение эффекта на изображение.
+
+var PREFIX_EFFECT = 'effect-';
+var filters = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
 
 var effect = document.querySelectorAll('.upload-effect-preview');
 var imagePreview = document.querySelector('.effect-image-preview');
 var effectSlider = document.querySelector('.upload-effect-level');
 
-effectSlider.setAttribute('hidden', 'hidden');
+var hide = function (entity) {
+  entity.setAttribute('hidden', 'hidden');
+};
+
+var show = function (entity) {
+  entity.removeAttribute('hidden');
+};
+
+hide(effectSlider);
 
 var effectClickHandler = function () {
-  var nameEffect = this.parentElement.previousElementSibling.getAttribute('value');
+  var effectName = this.parentElement.previousElementSibling.getAttribute('value');
 
-  if (nameEffect === 'none') {
-    effectSlider.setAttribute('hidden', 'hidden');
+  if (effectName === filters[0]) {
+    hide(effectSlider);
   } else {
-    effectSlider.removeAttribute('hidden');
+    show(effectSlider);
   }
 
-  imagePreview.classList.remove('effect-chrome', 'effect-sepia', 'effect-marvin', 'effect-phobos', 'effect-heat');
-  imagePreview.classList.add('effect-' + nameEffect);
+  for (i = 0; i < filters.length; i++) {
+    var className = PREFIX_EFFECT + filters[i];
+    var classOn = imagePreview.classList.contains(className);
+
+    if (classOn === true) {
+      imagePreview.classList.remove(className);
+    }
+  }
+
+  imagePreview.classList.add(PREFIX_EFFECT + effectName);
 };
 
 for (i = 0; i < effect.length; i++) {
