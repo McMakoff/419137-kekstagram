@@ -126,24 +126,16 @@ boxEffectPin.addEventListener('mouseup', function () {
 
 var effectNode = document.querySelectorAll('.upload-effect-preview');
 var imagePreview = document.querySelector('.effect-image-preview');
-console.log(effectNode);
 
+var clickHandlerEffect = function () {
+  var nameEffect = this.parentElement.previousElementSibling.getAttribute('value');
 
-
-var clickHandlerEffect = function (evt) {
-  var j = this.parentElement.previousElementSibling;
-  var s = j.getAttribute('value');
-  imagePreview.classList.remove('effect-[...]');
-  imagePreview.classList.add('effect-' + s);
-
-  // galleryOverlay(valueSrc, valueComment, valueLike);
-  evt.preventDefault();
-  evt.stopPropagation();
-  return false;
+  imagePreview.classList.remove('effect-chrome', 'effect-sepia', 'effect-marvin', 'effect-phobos', 'effect-heat');
+  imagePreview.classList.add('effect-' + nameEffect);
 };
 
 for (i = 0; i < effectNode.length; i++) {
-  effectNode[i].addEventListener('click', clickHandlerEffect, false);
+  effectNode[i].addEventListener('click', clickHandlerEffect);
 }
 
 // Показ изображения в полноэкранном режиме.
@@ -172,18 +164,3 @@ var clickHandler = function (evt) {
 for (i = 0; i < pictureNode.length; i++) {
   pictureNode[i].addEventListener('click', clickHandler, false);
 }
-
-/* код, в который я подсматривала.
-
-elem = document.getElementById('TestStop')
-
-function handler(e) {
-  e.preventDefault() // браузер - стоять
-  e.stopPropagation() // событие - не всплывать
-  return false // и вообще, мне больше ничего не надо
-}
-
-elem.addEventListener('click', handler, false)
-
-elem.addEventListener('click', function() { alert('А я сработало..') }, false);
-*/
