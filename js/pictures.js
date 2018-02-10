@@ -124,23 +124,32 @@ boxEffectPin.addEventListener('mouseup', function () {
 
 // Наложение эффекта на изображение.
 
-var effectNode = document.querySelectorAll('.upload-effect-preview');
+var effect = document.querySelectorAll('.upload-effect-preview');
 var imagePreview = document.querySelector('.effect-image-preview');
+var effectSlider = document.querySelector('.upload-effect-level');
 
-var clickHandlerEffect = function () {
+effectSlider.setAttribute('hidden', 'hidden');
+
+var effectClickHandler = function () {
   var nameEffect = this.parentElement.previousElementSibling.getAttribute('value');
+
+  if (nameEffect === 'none') {
+    effectSlider.setAttribute('hidden', 'hidden');
+  } else {
+    effectSlider.removeAttribute('hidden');
+  }
 
   imagePreview.classList.remove('effect-chrome', 'effect-sepia', 'effect-marvin', 'effect-phobos', 'effect-heat');
   imagePreview.classList.add('effect-' + nameEffect);
 };
 
-for (i = 0; i < effectNode.length; i++) {
-  effectNode[i].addEventListener('click', clickHandlerEffect);
+for (i = 0; i < effect.length; i++) {
+  effect[i].addEventListener('click', effectClickHandler);
 }
 
 // Показ изображения в полноэкранном режиме.
 
-var pictureNode = document.querySelectorAll('.picture');
+var picture = document.querySelectorAll('.picture');
 
 var galleryOverlay = function (src, comment, like) {
   galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', src);
@@ -150,17 +159,15 @@ var galleryOverlay = function (src, comment, like) {
   galleryCover.classList.remove('hidden');
 };
 
-var clickHandler = function (evt) {
+var pictureClickHandler = function (evt) {
   var valueSrc = this.querySelector('img').getAttribute('src');
   var valueComment = this.querySelector('.picture-comments').textContent;
   var valueLike = this.querySelector('.picture-likes').textContent;
 
   galleryOverlay(valueSrc, valueComment, valueLike);
   evt.preventDefault();
-  evt.stopPropagation();
-  return false;
 };
 
-for (i = 0; i < pictureNode.length; i++) {
-  pictureNode[i].addEventListener('click', clickHandler, false);
+for (i = 0; i < picture.length; i++) {
+  picture[i].addEventListener('click', pictureClickHandler);
 }
