@@ -97,35 +97,6 @@ uploadCancel.addEventListener('click', function () {
   uploadFile.setAttribute('value', '');
 });
 
-// Определение уровня насыщенности.
-
-var SIZE_CONTROL = 455;
-var SIZE_PIN = 9;
-var sizeWindow = document.documentElement.clientWidth;
-var startPin = (sizeWindow - SIZE_CONTROL) / 2;
-
-var effectLevel = document.querySelector('.upload-effect-level');
-var boxEffectPin = effectLevel.querySelector('.upload-effect-level-pin');
-var valueEffectLine = effectLevel.querySelector('.upload-effect-level-val');
-var valueEffectInput = effectLevel.querySelector('.upload-effect-level-value');
-
-boxEffectPin.addEventListener('mouseup', function () {
-  var valuePin = event.clientX - startPin;
-  valueEffectInput.setAttribute('value', Math.round((valuePin + SIZE_PIN) / SIZE_CONTROL * 100));
-  valueEffectLine.style.width = (valueEffectInput.getAttribute('value')) + '%';
-});
-
-// Обновление css стилей
-
-
-
-// 'effect-chrome', 'effect-sepia', 'effect-marvin', 'effect-phobos', 'effect-heat'document.images[h].style.filter = "grayscale(0)";
-// хром, сепия           (valuePin / SIZE_CONTROL);
-// марвин                (valuePin / SIZE_CONTROL) * 100;
-// фобос, зной           (valuePin / SIZE_CONTROL) * 3;
-
-
-
 // Наложение эффекта на изображение.
 
 var PREFIX_EFFECT = 'effect-';
@@ -135,26 +106,18 @@ var effect = document.querySelectorAll('.upload-effect-preview');
 var imagePreview = document.querySelector('.effect-image-preview');
 var effectSlider = document.querySelector('.upload-effect-level');
 
-var hide = function (entity) {
-  entity.setAttribute('hidden', 'hidden');
-};
+effectSlider.setAttribute('hidden', 'hidden');
 
-var show = function (entity) {
-  entity.removeAttribute('hidden');
-};
-
-hide(effectSlider);
-
-var effectClickHandler = function () {
-  var effectName = this.parentElement.previousElementSibling.getAttribute('value');
-
-  if (effectName === filters[0]) {
-    hide(effectSlider);
+var toggle = function (slider) {
+  if (slider === filters[0]) {
+    effectSlider.setAttribute('hidden', 'hidden');
   } else {
-    show(effectSlider);
+    effectSlider.removeAttribute('hidden');
   }
+};
 
-  for (i = 0; i < filters.length; i++) {
+var purge = function (name) {
+  for (i = 0; i < name.length; i++) {
     var className = PREFIX_EFFECT + filters[i];
     var classOn = imagePreview.classList.contains(className);
 
@@ -162,13 +125,53 @@ var effectClickHandler = function () {
       imagePreview.classList.remove(className);
     }
   }
+};
 
+var effectClickHandler = function () {
+  var effectName = this.parentElement.previousElementSibling.getAttribute('value');
+
+  purge(filters);
+  toggle(effectName);
   imagePreview.classList.add(PREFIX_EFFECT + effectName);
 };
 
 for (i = 0; i < effect.length; i++) {
   effect[i].addEventListener('click', effectClickHandler);
 }
+
+// Определение уровня насыщенности.
+
+var SIZE_CONTROL = 455;
+var SIZE_PIN = 9;
+var sizeWindow = document.documentElement.clientWidth;
+var startPin = (sizeWindow - SIZE_CONTROL) / 2;
+
+var effectLevel = document.querySelector('.upload-effect-level');
+var pin = effectLevel.querySelector('.upload-effect-level-pin');
+var valueEffectLine = effectLevel.querySelector('.upload-effect-level-val');
+var valueEffectInput = effectLevel.querySelector('.upload-effect-level-value');
+
+var applyFilter = function (scale) {
+  var grayscale = 'grayscale(' + String(scale) + ')';
+  var sepia = 'sepia(' + String(scale) + ')';
+  var invert = 'invert(' + String(scale * 100) + '%)';
+  var blur = 'blur(' + String(scale * 3) + 'px)';
+  var brightness = 'brightness(' + String(scale * 3) + ')';
+
+  imagePreview.style.filter = invert;
+};
+
+var pinMouseUpHandler = function (evt) {
+  var valuePin = evt.clientX - startPin;
+  var scaleFilter = valuePin / SIZE_CONTROL;
+
+  valueEffectInput.setAttribute('value', Math.round((valuePin + SIZE_PIN) / SIZE_CONTROL * 100));
+  valueEffectLine.style.width = (valueEffectInput.getAttribute('value')) + '%';
+
+  applyFilter(scaleFilter);
+};
+
+pin.addEventListener('mouseup', pinMouseUpHandler);
 
 // Показ изображения в полноэкранном режиме.
 
