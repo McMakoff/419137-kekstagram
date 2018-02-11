@@ -84,17 +84,42 @@ pictureList.appendChild(fragment);
 
 // Открытие и закрытие формы редактирования изображения.
 
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 var uploadOverlay = document.querySelector('.upload-overlay');
 var uploadFile = document.querySelector('#upload-file');
 var uploadCancel = document.querySelector('#upload-cancel');
 
-uploadFile.addEventListener('change', function () {
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+var openPopup = function () {
   uploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var closePopup = function () {
+  uploadFile.setAttribute('value', '');
+  uploadOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+uploadFile.addEventListener('change', function () {
+  openPopup();
 });
 
 uploadCancel.addEventListener('click', function () {
-  uploadOverlay.classList.add('hidden');
-  uploadFile.setAttribute('value', '');
+  closePopup();
+});
+
+uploadCancel.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
 });
 
 // Наложение эффекта на изображение.
@@ -136,11 +161,6 @@ var purge = function (name) {
   }
 };
 
-var calculatingFilter = function (pin) {
-  valueEffectInput.setAttribute('value', Math.round((pin + SIZE_PIN) / SIZE_CONTROL * 100));
-  valueEffectLine.style.width = (valueEffectInput.getAttribute('value')) + '%';
-};
-
 var applyFilter = function (scale, name) {
   var none = 'none';
   var grayscale = 'grayscale(' + String(scale) + ')';
@@ -166,6 +186,7 @@ var applyFilter = function (scale, name) {
   valueEffectInput.setAttribute('value', Math.round(scale * 100));
   valueEffectLine.style.width = (valueEffectInput.getAttribute('value')) + '%';
   pin.style.left = (valueEffectInput.getAttribute('value')) + '%';
+  imagePreview.classList.add(PREFIX_EFFECT + name);
 };
 
 var effectClickHandler = function () {
@@ -174,19 +195,25 @@ var effectClickHandler = function () {
   purge(filters);
   toggle(effectName);
   applyFilter(DEPTH_EFFECT, effectName);
-  imagePreview.classList.add(PREFIX_EFFECT + effectName);
 };
 
 for (i = 0; i < effect.length; i++) {
   effect[i].addEventListener('click', effectClickHandler);
 }
 
-var pinMouseUpHandler = function (evt) {
-  var valuePin = evt.clientX - startPin;
-  var scaleFilter = valuePin / SIZE_CONTROL;
+// Управление ползунком
 
-  calculatingFilter(valuePin);
-  applyFilter(scaleFilter);
+var pinMouseUpHandler = function (evt) {
+  var scaleFilter = (evt.clientX - startPin) / SIZE_CONTROL;
+
+  for (i = 0; i < filters.length; i++) {
+    var className = PREFIX_EFFECT + filters[i];
+    var classOn = imagePreview.classList.contains(className);
+
+    if (classOn === true) {
+      applyFilter(scaleFilter, filters[i]);
+    }
+  }
 };
 
 pin.addEventListener('mouseup', pinMouseUpHandler);
