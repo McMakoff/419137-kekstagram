@@ -99,12 +99,21 @@ uploadCancel.addEventListener('click', function () {
 
 // Наложение эффекта на изображение.
 
+var DEPTH_EFFECT = 1;
 var PREFIX_EFFECT = 'effect-';
 var filters = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
+var SIZE_CONTROL = 455;
+var SIZE_PIN = 9;
+var sizeWindow = document.documentElement.clientWidth;
+var startPin = (sizeWindow - SIZE_CONTROL) / 2;
 
 var effect = document.querySelectorAll('.upload-effect-preview');
 var imagePreview = document.querySelector('.effect-image-preview');
 var effectSlider = document.querySelector('.upload-effect-level');
+var effectLevel = document.querySelector('.upload-effect-level');
+var pin = effectLevel.querySelector('.upload-effect-level-pin');
+var valueEffectLine = effectLevel.querySelector('.upload-effect-level-val');
+var valueEffectInput = effectLevel.querySelector('.upload-effect-level-value');
 
 effectSlider.setAttribute('hidden', 'hidden');
 
@@ -127,11 +136,44 @@ var purge = function (name) {
   }
 };
 
+var calculatingFilter = function (pin) {
+  valueEffectInput.setAttribute('value', Math.round((pin + SIZE_PIN) / SIZE_CONTROL * 100));
+  valueEffectLine.style.width = (valueEffectInput.getAttribute('value')) + '%';
+};
+
+var applyFilter = function (scale, name) {
+  var none = 'none';
+  var grayscale = 'grayscale(' + String(scale) + ')';
+  var sepia = 'sepia(' + String(scale) + ')';
+  var invert = 'invert(' + String(scale * 100) + '%)';
+  var blur = 'blur(' + String(scale * 3) + 'px)';
+  var brightness = 'brightness(' + String(scale * 3) + ')';
+
+  if (name === filters[1]) {
+    imagePreview.style.filter = grayscale;
+  } else if (name === filters[2]) {
+    imagePreview.style.filter = sepia;
+  } else if (name === filters[3]) {
+    imagePreview.style.filter = invert;
+  } else if (name === filters[4]) {
+    imagePreview.style.filter = blur;
+  } else if (name === filters[5]) {
+    imagePreview.style.filter = brightness;
+  } else {
+    imagePreview.style.filter = none;
+  }
+
+  valueEffectInput.setAttribute('value', Math.round(scale * 100));
+  valueEffectLine.style.width = (valueEffectInput.getAttribute('value')) + '%';
+  pin.style.left = (valueEffectInput.getAttribute('value')) + '%';
+};
+
 var effectClickHandler = function () {
   var effectName = this.parentElement.previousElementSibling.getAttribute('value');
 
   purge(filters);
   toggle(effectName);
+  applyFilter(DEPTH_EFFECT, effectName);
   imagePreview.classList.add(PREFIX_EFFECT + effectName);
 };
 
@@ -139,35 +181,11 @@ for (i = 0; i < effect.length; i++) {
   effect[i].addEventListener('click', effectClickHandler);
 }
 
-// Определение уровня насыщенности.
-
-var SIZE_CONTROL = 455;
-var SIZE_PIN = 9;
-var sizeWindow = document.documentElement.clientWidth;
-var startPin = (sizeWindow - SIZE_CONTROL) / 2;
-
-var effectLevel = document.querySelector('.upload-effect-level');
-var pin = effectLevel.querySelector('.upload-effect-level-pin');
-var valueEffectLine = effectLevel.querySelector('.upload-effect-level-val');
-var valueEffectInput = effectLevel.querySelector('.upload-effect-level-value');
-
-var applyFilter = function (scale) {
-  var grayscale = 'grayscale(' + String(scale) + ')';
-  var sepia = 'sepia(' + String(scale) + ')';
-  var invert = 'invert(' + String(scale * 100) + '%)';
-  var blur = 'blur(' + String(scale * 3) + 'px)';
-  var brightness = 'brightness(' + String(scale * 3) + ')';
-
-  imagePreview.style.filter = invert;
-};
-
 var pinMouseUpHandler = function (evt) {
   var valuePin = evt.clientX - startPin;
   var scaleFilter = valuePin / SIZE_CONTROL;
 
-  valueEffectInput.setAttribute('value', Math.round((valuePin + SIZE_PIN) / SIZE_CONTROL * 100));
-  valueEffectLine.style.width = (valueEffectInput.getAttribute('value')) + '%';
-
+  calculatingFilter(valuePin);
   applyFilter(scaleFilter);
 };
 
