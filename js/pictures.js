@@ -103,8 +103,8 @@ var openPopup = function () {
 };
 
 var closePopup = function () {
-  uploadFile.setAttribute('value', '');
   uploadOverlay.classList.add('hidden');
+  uploadFile.setAttribute('value', '');
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
@@ -128,25 +128,23 @@ var DEPTH_EFFECT = 1;
 var PREFIX_EFFECT = 'effect-';
 var filters = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
 var SIZE_CONTROL = 455;
-var SIZE_PIN = 9;
 var sizeWindow = document.documentElement.clientWidth;
 var startPin = (sizeWindow - SIZE_CONTROL) / 2;
 
 var effect = document.querySelectorAll('.upload-effect-preview');
 var imagePreview = document.querySelector('.effect-image-preview');
-var effectSlider = document.querySelector('.upload-effect-level');
-var effectLevel = document.querySelector('.upload-effect-level');
-var pin = effectLevel.querySelector('.upload-effect-level-pin');
-var valueEffectLine = effectLevel.querySelector('.upload-effect-level-val');
-var valueEffectInput = effectLevel.querySelector('.upload-effect-level-value');
+var filterSlider = document.querySelector('.upload-effect-level');
+var pin = filterSlider.querySelector('.upload-effect-level-pin');
+var valueEffectLine = filterSlider.querySelector('.upload-effect-level-val');
+var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
 
-effectSlider.setAttribute('hidden', 'hidden');
+filterSlider.setAttribute('hidden', 'hidden');
 
 var toggle = function (slider) {
   if (slider === filters[0]) {
-    effectSlider.setAttribute('hidden', 'hidden');
+    filterSlider.setAttribute('hidden', 'hidden');
   } else {
-    effectSlider.removeAttribute('hidden');
+    filterSlider.removeAttribute('hidden');
   }
 };
 
@@ -163,22 +161,22 @@ var purge = function (name) {
 
 var applyFilter = function (scale, name) {
   var none = 'none';
-  var grayscale = 'grayscale(' + String(scale) + ')';
+  var chrome = 'grayscale(' + String(scale) + ')';
   var sepia = 'sepia(' + String(scale) + ')';
-  var invert = 'invert(' + String(scale * 100) + '%)';
-  var blur = 'blur(' + String(scale * 3) + 'px)';
-  var brightness = 'brightness(' + String(scale * 3) + ')';
+  var marvin = 'invert(' + String(scale * 100) + '%)';
+  var phobos = 'blur(' + String(scale * 3) + 'px)';
+  var heat = 'brightness(' + String(scale * 3) + ')';
 
   if (name === filters[1]) {
-    imagePreview.style.filter = grayscale;
+    imagePreview.style.filter = chrome;
   } else if (name === filters[2]) {
     imagePreview.style.filter = sepia;
   } else if (name === filters[3]) {
-    imagePreview.style.filter = invert;
+    imagePreview.style.filter = marvin;
   } else if (name === filters[4]) {
-    imagePreview.style.filter = blur;
+    imagePreview.style.filter = phobos;
   } else if (name === filters[5]) {
-    imagePreview.style.filter = brightness;
+    imagePreview.style.filter = heat;
   } else {
     imagePreview.style.filter = none;
   }
@@ -201,7 +199,7 @@ for (i = 0; i < effect.length; i++) {
   effect[i].addEventListener('click', effectClickHandler);
 }
 
-// Управление ползунком
+// Управление ползунком.
 
 var pinMouseUpHandler = function (evt) {
   var scaleFilter = (evt.clientX - startPin) / SIZE_CONTROL;
@@ -217,6 +215,46 @@ var pinMouseUpHandler = function (evt) {
 };
 
 pin.addEventListener('mouseup', pinMouseUpHandler);
+
+// Изменение размера изображения.
+
+var FULL_RESIZE = 1;
+var STEP_RESIZE = 0.25;
+var resize = FULL_RESIZE;
+
+var minus = document.querySelector('.upload-resize-controls-button-dec');
+var plus = document.querySelector('.upload-resize-controls-button-inc');
+var resizeControls = document.querySelector('.upload-resize-controls-value');
+
+imagePreview.style.transform = 'scale(' + String(FULL_RESIZE) + ')';
+resizeControls.setAttribute('value', String(FULL_RESIZE * 100) + '%');
+
+
+var resizeRise = function () {
+  if (resize < FULL_RESIZE) {
+    resize = resize + STEP_RESIZE;
+  }
+
+  imagePreview.style.transform = 'scale(' + String(resize) + ')';
+  resizeControls.setAttribute('value', String(resize * 100) + '%');
+};
+
+var resizeDecline = function () {
+  if (resize > STEP_RESIZE) {
+    resize = resize - STEP_RESIZE;
+  }
+
+  imagePreview.style.transform = 'scale(' + String(resize) + ')';
+  resizeControls.setAttribute('value', String(resize * 100) + '%');
+};
+
+plus.addEventListener('click', function () {
+  resizeRise();
+});
+
+minus.addEventListener('click', function () {
+  resizeDecline();
+});
 
 // Показ изображения в полноэкранном режиме.
 
