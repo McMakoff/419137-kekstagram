@@ -187,8 +187,8 @@ var applyFilter = function (scale, name) {
   imagePreview.classList.add(PREFIX_EFFECT + name);
 };
 
-var effectClickHandler = function () {
-  var effectName = this.parentElement.previousElementSibling.value;
+var effectClickHandler = function (evt) {
+  var effectName = evt.target.parentElement.previousElementSibling.value;
 
   purge(filters);
   toggle(effectName);
@@ -269,12 +269,13 @@ var galleryOverlay = function (src, comment, like) {
 };
 
 var pictureClickHandler = function (evt) {
-  var valueSrc = this.querySelector('img').src;
-  var valueComment = this.querySelector('.picture-comments').textContent;
-  var valueLike = this.querySelector('.picture-likes').textContent;
+  evt.preventDefault();
+
+  var valueSrc = evt.target.src;
+  var valueComment = evt.target.textContent;
+  var valueLike = evt.target.textContent;
 
   galleryOverlay(valueSrc, valueComment, valueLike);
-  evt.preventDefault();
 };
 
 for (i = 0; i < picture.length; i++) {
