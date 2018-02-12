@@ -159,10 +159,7 @@ var purge = function (name) {
   }
 };
 
-
-
 var applyFilter = function (scale, name) {
-
   var filter = {
     none: 'none',
     chrome: 'grayscale(' + String(scale) + ')',
@@ -212,7 +209,7 @@ for (i = 0; i < effect.length; i++) {
 
 // Управление ползунком.
 
-var pinMouseUpHandler = function (evt) {
+var filterSliderMouseUpHandler = function (evt) {
   var scaleFilter = (evt.clientX - startPin) / SIZE_CONTROL;
 
   for (i = 0; i < FILTERS.length; i++) {
@@ -225,7 +222,7 @@ var pinMouseUpHandler = function (evt) {
   }
 };
 
-pin.addEventListener('mouseup', pinMouseUpHandler);
+filterSlider.addEventListener('mouseup', filterSliderMouseUpHandler);
 
 // Изменение размера изображения.
 
