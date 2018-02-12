@@ -69,7 +69,7 @@ for (var i = 0; i < PHOTO_NUMBER; i++) {
 var renderPicture = function (picture) {
   var pictureElement = pictureTemplate.cloneNode(true);
 
-  pictureElement.querySelector('.picture img').setAttribute('src', picture.url);
+  pictureElement.querySelector('.picture img').src = picture.url;
   pictureElement.querySelector('.picture-likes').textContent = picture.likes;
   pictureElement.querySelector('.picture-comments').textContent = picture.comments.length;
 
@@ -91,6 +91,12 @@ var uploadOverlay = document.querySelector('.upload-overlay');
 var uploadFile = document.querySelector('#upload-file');
 var uploadCancel = document.querySelector('#upload-cancel');
 
+var closePopup = function () {
+  uploadOverlay.classList.add('hidden');
+  uploadFile.value = '';
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closePopup();
@@ -100,12 +106,6 @@ var onPopupEscPress = function (evt) {
 var openPopup = function () {
   uploadOverlay.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
-};
-
-var closePopup = function () {
-  uploadOverlay.classList.add('hidden');
-  uploadFile.setAttribute('value', '');
-  document.removeEventListener('keydown', onPopupEscPress);
 };
 
 uploadFile.addEventListener('change', function () {
@@ -138,11 +138,11 @@ var pin = filterSlider.querySelector('.upload-effect-level-pin');
 var valueEffectLine = filterSlider.querySelector('.upload-effect-level-val');
 var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
 
-filterSlider.setAttribute('hidden', 'hidden');
+filterSlider.hidden = 'hidden';
 
 var toggle = function (slider) {
   if (slider === filters[0]) {
-    filterSlider.setAttribute('hidden', 'hidden');
+    filterSlider.hidden = 'hidden';
   } else {
     filterSlider.removeAttribute('hidden');
   }
@@ -181,14 +181,14 @@ var applyFilter = function (scale, name) {
     imagePreview.style.filter = none;
   }
 
-  valueEffectInput.setAttribute('value', Math.round(scale * 100));
-  valueEffectLine.style.width = (valueEffectInput.getAttribute('value')) + '%';
-  pin.style.left = (valueEffectInput.getAttribute('value')) + '%';
+  valueEffectInput.value = Math.round(scale * 100);
+  valueEffectLine.style.width = valueEffectInput.value + '%';
+  pin.style.left = valueEffectInput.value + '%';
   imagePreview.classList.add(PREFIX_EFFECT + name);
 };
 
 var effectClickHandler = function () {
-  var effectName = this.parentElement.previousElementSibling.getAttribute('value');
+  var effectName = this.parentElement.previousElementSibling.value;
 
   purge(filters);
   toggle(effectName);
@@ -227,25 +227,25 @@ var plus = document.querySelector('.upload-resize-controls-button-inc');
 var resizeControls = document.querySelector('.upload-resize-controls-value');
 
 imagePreview.style.transform = 'scale(' + String(FULL_RESIZE) + ')';
-resizeControls.setAttribute('value', String(FULL_RESIZE * 100) + '%');
+resizeControls.value = String(resize * 100) + '%';
 
 
 var resizeRise = function () {
   if (resize < FULL_RESIZE) {
-    resize = resize + STEP_RESIZE;
+    resize += STEP_RESIZE;
   }
 
   imagePreview.style.transform = 'scale(' + String(resize) + ')';
-  resizeControls.setAttribute('value', String(resize * 100) + '%');
+  resizeControls.value = String(resize * 100) + '%';
 };
 
 var resizeDecline = function () {
   if (resize > STEP_RESIZE) {
-    resize = resize - STEP_RESIZE;
+    resize -= STEP_RESIZE;
   }
 
   imagePreview.style.transform = 'scale(' + String(resize) + ')';
-  resizeControls.setAttribute('value', String(resize * 100) + '%');
+  resizeControls.value = String(resize * 100) + '%';
 };
 
 plus.addEventListener('click', function () {
@@ -261,7 +261,7 @@ minus.addEventListener('click', function () {
 var picture = document.querySelectorAll('.picture');
 
 var galleryOverlay = function (src, comment, like) {
-  galleryCover.querySelector('.gallery-overlay-image').setAttribute('src', src);
+  galleryCover.querySelector('.gallery-overlay-image').src = src;
   galleryCover.querySelector('.comments-count').textContent = comment;
   galleryCover.querySelector('.likes-count').textContent = like;
 
@@ -269,7 +269,7 @@ var galleryOverlay = function (src, comment, like) {
 };
 
 var pictureClickHandler = function (evt) {
-  var valueSrc = this.querySelector('img').getAttribute('src');
+  var valueSrc = this.querySelector('img').src;
   var valueComment = this.querySelector('.picture-comments').textContent;
   var valueLike = this.querySelector('.picture-likes').textContent;
 
