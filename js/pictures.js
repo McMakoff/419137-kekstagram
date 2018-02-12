@@ -126,7 +126,7 @@ uploadCancel.addEventListener('keydown', function (evt) {
 
 var DEPTH_EFFECT = 1;
 var PREFIX_EFFECT = 'effect-';
-var filters = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
+var FILTERS = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
 var SIZE_CONTROL = 455;
 var sizeWindow = document.documentElement.clientWidth;
 var startPin = (sizeWindow - SIZE_CONTROL) / 2;
@@ -141,7 +141,7 @@ var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
 filterSlider.hidden = 'hidden';
 
 var toggle = function (slider) {
-  if (slider === filters[0]) {
+  if (slider === FILTERS[0]) {
     filterSlider.hidden = 'hidden';
   } else {
     filterSlider.removeAttribute('hidden');
@@ -150,7 +150,7 @@ var toggle = function (slider) {
 
 var purge = function (name) {
   for (i = 0; i < name.length; i++) {
-    var className = PREFIX_EFFECT + filters[i];
+    var className = PREFIX_EFFECT + FILTERS[i];
     var classOn = imagePreview.classList.contains(className);
 
     if (classOn === true) {
@@ -159,26 +159,37 @@ var purge = function (name) {
   }
 };
 
-var applyFilter = function (scale, name) {
-  var none = 'none';
-  var chrome = 'grayscale(' + String(scale) + ')';
-  var sepia = 'sepia(' + String(scale) + ')';
-  var marvin = 'invert(' + String(scale * 100) + '%)';
-  var phobos = 'blur(' + String(scale * 3) + 'px)';
-  var heat = 'brightness(' + String(scale * 3) + ')';
 
-  if (name === filters[1]) {
-    imagePreview.style.filter = chrome;
-  } else if (name === filters[2]) {
-    imagePreview.style.filter = sepia;
-  } else if (name === filters[3]) {
-    imagePreview.style.filter = marvin;
-  } else if (name === filters[4]) {
-    imagePreview.style.filter = phobos;
-  } else if (name === filters[5]) {
-    imagePreview.style.filter = heat;
-  } else {
-    imagePreview.style.filter = none;
+
+var applyFilter = function (scale, name) {
+
+  var filter = {
+    none: 'none',
+    chrome: 'grayscale(' + String(scale) + ')',
+    sepia: 'sepia(' + String(scale) + ')',
+    marvin: 'invert(' + String(scale * 100) + '%)',
+    phobos: 'blur(' + String(scale * 3) + 'px)',
+    heat: 'brightness(' + String(scale * 3) + ')'
+  };
+
+  switch (name) {
+    case FILTERS[1]:
+      imagePreview.style.filter = filter.chrome;
+      break;
+    case FILTERS[2]:
+      imagePreview.style.filter = filter.sepia;
+      break;
+    case FILTERS[3]:
+      imagePreview.style.filter = filter.marvin;
+      break;
+    case FILTERS[4]:
+      imagePreview.style.filter = filter.phobos;
+      break;
+    case FILTERS[5]:
+      imagePreview.style.filter = filter.heat;
+      break;
+    default:
+      imagePreview.style.filter = filter.none;
   }
 
   valueEffectInput.value = Math.round(scale * 100);
@@ -190,7 +201,7 @@ var applyFilter = function (scale, name) {
 var effectClickHandler = function (evt) {
   var effectName = evt.target.parentElement.previousElementSibling.value;
 
-  purge(filters);
+  purge(FILTERS);
   toggle(effectName);
   applyFilter(DEPTH_EFFECT, effectName);
 };
@@ -204,12 +215,12 @@ for (i = 0; i < effect.length; i++) {
 var pinMouseUpHandler = function (evt) {
   var scaleFilter = (evt.clientX - startPin) / SIZE_CONTROL;
 
-  for (i = 0; i < filters.length; i++) {
-    var className = PREFIX_EFFECT + filters[i];
+  for (i = 0; i < FILTERS.length; i++) {
+    var className = PREFIX_EFFECT + FILTERS[i];
     var classOn = imagePreview.classList.contains(className);
 
     if (classOn === true) {
-      applyFilter(scaleFilter, filters[i]);
+      applyFilter(scaleFilter, FILTERS[i]);
     }
   }
 };
