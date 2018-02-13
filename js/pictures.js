@@ -289,3 +289,64 @@ var pictureClickHandler = function (evt) {
 for (i = 0; i < picture.length; i++) {
   picture[i].addEventListener('click', pictureClickHandler);
 }
+
+// Валидация формы.
+
+var EMPTY_STROKE = '';
+var BIG_STROKE = 20;
+var NORM_HASHTAG = 5;
+
+var inputHashtag = document.querySelector('.upload-form-hashtags'); // нахожу поле для ввода тегов
+console.log(inputHashtag.value);
+
+var hashtags = inputHashtag.value.toLowerCase().split(/ /); // создаю массив тегов: тег - это одно слово в нижнем регистре
+
+console.log(hashtags);
+
+var control = function (stroke, unique) {
+  var on = true;
+
+  for (var j = 0; j < unique.length; j++) {
+    if (unique[j] === stroke) {
+      on = false;
+    } else if (stroke === EMPTY_STROKE) {
+      on = false;
+    } else if (stroke.length > BIG_STROKE) {
+      console.log('error()');
+    }
+  }
+
+  return on;
+};
+
+var check = function (tag) {
+  var uniqueTags = [];
+
+  for (i = 0; i < tag.length; i++) {
+    var str = tag[i];
+    var hach = str.search(/#/);
+
+    if (hach !== 0 && str !== EMPTY_STROKE) {
+      str = '#' + str;
+    }
+
+    var onTag = control(str, uniqueTags);
+
+    if (onTag === true) {
+      uniqueTags.push(str);
+    } else {
+      continue;
+    }
+  }
+
+  return uniqueTags;
+};
+
+hashtags = check(hashtags); // массив уникальных тегов, все теги начинаются с #;
+
+if (hashtags.length > 5) {
+  console.log('error()');
+}
+
+inputHashtag.value = hashtags.join(' ');
+console.log(inputHashtag.value);
