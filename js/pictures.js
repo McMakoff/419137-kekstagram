@@ -90,6 +90,7 @@ var ENTER_KEYCODE = 13;
 var uploadOverlay = document.querySelector('.upload-overlay');
 var uploadFile = document.querySelector('#upload-file');
 var uploadCancel = document.querySelector('#upload-cancel');
+var uploadDescription = document.querySelector('.upload-form-description');
 
 var closePopup = function () {
   uploadOverlay.classList.add('hidden');
@@ -119,6 +120,12 @@ uploadCancel.addEventListener('click', function () {
 uploadCancel.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     closePopup();
+  }
+});
+
+uploadDescription.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    event.stopPropagation();
   }
 });
 
@@ -296,12 +303,7 @@ var EMPTY_STROKE = '';
 var BIG_STROKE = 20;
 var NORM_HASHTAG = 5;
 
-var inputHashtag = document.querySelector('.upload-form-hashtags'); // нахожу поле для ввода тегов
-console.log(inputHashtag.value);
-
-var hashtags = inputHashtag.value.toLowerCase().split(/ /); // создаю массив тегов: тег - это одно слово в нижнем регистре
-
-console.log(hashtags);
+var inputHashtag = document.querySelector('.upload-form-hashtags');
 
 var control = function (stroke, unique) {
   var on = true;
@@ -311,8 +313,6 @@ var control = function (stroke, unique) {
       on = false;
     } else if (stroke === EMPTY_STROKE) {
       on = false;
-    } else if (stroke.length > BIG_STROKE) {
-      console.log('error' + stroke.length);
     }
   }
 
@@ -342,11 +342,37 @@ var check = function (tag) {
   return uniqueTags;
 };
 
-hashtags = check(hashtags); // массив уникальных тегов, все теги начинаются с #;
+var bigCheck = function (tag) {
+  var big = BIG_STROKE;
 
-if (hashtags.length > 5) {
-  console.log('error' + hashtags.length);
-}
+  for (i = 0; i < tag.length; i++) {
+    var stroke = tag[i];
 
-inputHashtag.value = hashtags.join(' ');
-console.log(inputHashtag.value);
+    if (stroke.length > BIG_STROKE) {
+      big = stroke.length;
+    } else {
+      continue;
+    }
+  }
+
+  return big;
+};
+
+
+var inputBlurHandler = function (evt) {
+  var hashtags = inputHashtag.value.toLowerCase().split(/ /);
+  hashtags = check(hashtags);
+  var bigTag = bigCheck(hashtags);
+
+  if (hashtags.length > NORM_HASHTAG) {
+    evt.target.setCustomValidity('Нельзя выбрать более 5 хэш-тегов');
+  } else if (bigTag > BIG_STROKE) {
+    evt.target.setCustomValidity('Нельзя выбрать хэш-тег длинной более 20 символов');
+  } else {
+    evt.target.setCustomValidity('');
+  }
+
+  inputHashtag.value = hashtags.join(' ');
+};
+
+inputHashtag.addEventListener('blur', inputBlurHandler);
