@@ -312,7 +312,7 @@ var control = function (stroke, unique) {
     } else if (stroke === EMPTY_STROKE) {
       on = false;
     } else if (stroke.length > BIG_STROKE) {
-      console.log('error()');
+      console.log('error' + stroke.length);
     }
   }
 
@@ -345,7 +345,7 @@ var check = function (tag) {
 hashtags = check(hashtags); // массив уникальных тегов, все теги начинаются с #;
 
 if (hashtags.length > 5) {
-  console.log('error()');
+  console.log('error' + hashtags.length);
 }
 
 inputHashtag.value = hashtags.join(' ');
