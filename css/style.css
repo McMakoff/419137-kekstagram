@@ -415,6 +415,10 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
   color: #000000;
 }
 
+.upload-form-hashtags:invalid {
+  border: 2px solid #9b3636;
+}
+
 /* Описание */
 .upload-form-description {
   display: block;

@@ -300,12 +300,12 @@ for (i = 0; i < picture.length; i++) {
 // Валидация формы.
 
 var EMPTY_STROKE = '';
-var BIG_STROKE = 20;
+var NORM_STROKE = 20;
 var NORM_HASHTAG = 5;
 
 var inputHashtag = document.querySelector('.upload-form-hashtags');
 
-var control = function (stroke, unique) {
+var checkRepeat = function (stroke, unique) {
   var on = true;
 
   for (var j = 0; j < unique.length; j++) {
@@ -330,7 +330,7 @@ var check = function (tag) {
       str = '#' + str;
     }
 
-    var onTag = control(str, uniqueTags);
+    var onTag = checkRepeat(str, uniqueTags);
 
     if (onTag === true) {
       uniqueTags.push(str);
@@ -342,13 +342,13 @@ var check = function (tag) {
   return uniqueTags;
 };
 
-var bigCheck = function (tag) {
-  var big = BIG_STROKE;
+var checkFly = function (tag) {
+  var big = NORM_STROKE;
 
   for (i = 0; i < tag.length; i++) {
     var stroke = tag[i];
 
-    if (stroke.length > BIG_STROKE) {
+    if (stroke.length > NORM_STROKE) {
       big = stroke.length;
     } else {
       continue;
@@ -358,16 +358,15 @@ var bigCheck = function (tag) {
   return big;
 };
 
-
 var inputBlurHandler = function (evt) {
   var hashtags = inputHashtag.value.toLowerCase().split(/ /);
   hashtags = check(hashtags);
-  var bigTag = bigCheck(hashtags);
+  var bigTag = checkFly(hashtags);
 
   if (hashtags.length > NORM_HASHTAG) {
-    evt.target.setCustomValidity('Нельзя выбрать более 5 хэш-тегов');
-  } else if (bigTag > BIG_STROKE) {
-    evt.target.setCustomValidity('Нельзя выбрать хэш-тег длинной более 20 символов');
+    evt.target.setCustomValidity('Введите не более 5 хэш-тегов');
+  } else if (bigTag > NORM_STROKE) {
+    evt.target.setCustomValidity('Длина хэш-тега более 20 символов');
   } else {
     evt.target.setCustomValidity('');
   }
