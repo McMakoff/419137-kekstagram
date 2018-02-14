@@ -125,7 +125,7 @@ uploadCancel.addEventListener('keydown', function (evt) {
 
 uploadDescription.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    event.stopPropagation();
+    evt.stopPropagation();
   }
 });
 
@@ -299,79 +299,74 @@ for (i = 0; i < picture.length; i++) {
 
 // Валидация формы.
 
-var EMPTY_STROKE = '';
+var NEW_HASHTAG = '#';
 var NORM_STROKE = 20;
 var NORM_HASHTAG = 5;
+var CHANCE_ERROR = 0;
 
 var inputHashtag = document.querySelector('.upload-form-hashtags');
 
-var checkRepeat = function (stroke, unique) {
-  var on = true;
-
-  for (var j = 0; j < unique.length; j++) {
-    if (unique[j] === stroke) {
-      on = false;
-    } else if (stroke === EMPTY_STROKE) {
-      on = false;
-    }
-  }
-
-  return on;
+var test = {
+  hach: CHANCE_ERROR,
+  unique: CHANCE_ERROR,
+  amount: CHANCE_ERROR,
+  long: CHANCE_ERROR
 };
 
-var check = function (tag) {
-  var uniqueTags = [];
+var controlUnique = function (unique, stroke) {
+  if (unique.indexOf(stroke) === -1) {
+    unique.push(stroke);
+  }
+
+  return unique;
+};
+
+var controlTag = function (tag) {
+  var originals = [];
 
   for (i = 0; i < tag.length; i++) {
     var str = tag[i];
-    var hach = str.search(/#/);
 
-    if (hach !== 0 && str !== EMPTY_STROKE) {
-      str = '#' + str;
-    }
+    controlUnique(originals, str);
 
-    var onTag = checkRepeat(str, uniqueTags);
-
-    if (onTag === true) {
-      uniqueTags.push(str);
-    } else {
-      continue;
+    if (str.search(NEW_HASHTAG) !== 0) {
+      test.hach = test.hach + 1;
+    } if (str.length > NORM_STROKE) {
+      test.long = test.long + 1;
     }
   }
 
-  return uniqueTags;
-};
-
-var checkFly = function (tag) {
-  var big = NORM_STROKE;
-
-  for (i = 0; i < tag.length; i++) {
-    var stroke = tag[i];
-
-    if (stroke.length > NORM_STROKE) {
-      big = stroke.length;
-    } else {
-      continue;
-    }
+  if (tag.length > NORM_HASHTAG) {
+    test.amount = test.amount + 1;
+  } if (tag.length > originals.length) {
+    test.unique = test.unique + 1;
   }
 
-  return big;
+  return test;
 };
 
 var inputBlurHandler = function (evt) {
   var hashtags = inputHashtag.value.toLowerCase().split(/ /);
-  hashtags = check(hashtags);
-  var bigTag = checkFly(hashtags);
+  controlTag(hashtags);
 
-  if (hashtags.length > NORM_HASHTAG) {
-    evt.target.setCustomValidity('Введите не более 5 хэш-тегов');
-  } else if (bigTag > NORM_STROKE) {
-    evt.target.setCustomValidity('Длина хэш-тега более 20 символов');
+  if (test.hach !== CHANCE_ERROR) {
+    evt.target.setCustomValidity('Хэш-теги должны начинаться с "#".');
+  } else if (test.long !== CHANCE_ERROR) {
+    evt.target.setCustomValidity('Длинна хэш-тега не более 20 символов.');
+  } else if (test.amount !== CHANCE_ERROR) {
+    evt.target.setCustomValidity('Введите не более 5 хэш-тегов.');
+  } else if (test.unique !== CHANCE_ERROR) {
+    evt.target.setCustomValidity('Хэш-теги не должны повторяться.');
   } else {
     evt.target.setCustomValidity('');
   }
 
-  inputHashtag.value = hashtags.join(' ');
+  test = {
+    hach: CHANCE_ERROR,
+    unique: CHANCE_ERROR,
+    amount: CHANCE_ERROR,
+    long: CHANCE_ERROR
+  };
 };
 
 inputHashtag.addEventListener('blur', inputBlurHandler);

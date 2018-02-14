@@ -417,6 +417,7 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
 
 .upload-form-hashtags:invalid {
   border: 2px solid #9b3636;
+  outline: none;
 }
 
 /* Описание */
