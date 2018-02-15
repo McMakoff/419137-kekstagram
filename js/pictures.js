@@ -325,8 +325,8 @@ var pictureClickHandler = function (evt) {
   evt.preventDefault();
 
   var valueSrc = evt.target.src;
-  var valueComment = evt.target.textContent;
-  var valueLike = evt.target.textContent;
+  var valueComment = evt.target.nextElementSibling.firstElementChild.textContent;
+  var valueLike = evt.target.nextElementSibling.lastElementChild.textContent;
 
   galleryOverlay(valueSrc, valueComment, valueLike);
 };
