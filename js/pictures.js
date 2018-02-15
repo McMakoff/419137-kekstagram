@@ -131,11 +131,9 @@ uploadDescription.addEventListener('keydown', function (evt) {
 
 // Наложение эффекта на изображение.
 
-var DEPTH_EFFECT = 1;
 var PREFIX_EFFECT = 'effect-';
 var FILTERS = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
 var SIZE_CONTROL = 455;
-var SIZE_PIN = 18;
 var sizeWindow = document.documentElement.clientWidth;
 var startPin = (sizeWindow - SIZE_CONTROL) / 2;
 
@@ -159,6 +157,12 @@ var scaleEffect = function (scal) {
     phobos: 'blur(' + scale * 3 + 'px)',
     heat: 'brightness(' + scale * 3 + ')'
   };
+
+  if (scale < 0) {
+    scale = 0;
+  } else if (scale > 1) {
+    scale = 1;
+  }
 
   valueEffectInput.value = Math.round(scale * 100);
   valueEffectLine.style.width = valueEffectInput.value + '%';
@@ -217,7 +221,7 @@ var toggleFilter = function (name) {
   }
 
   imagePreview.classList.add(PREFIX_EFFECT + name);
-  applyFilter(scaleEffect(DEPTH_EFFECT));
+  applyFilter(scaleEffect(SIZE_CONTROL));
 };
 
 var effectClickHandler = function (evt) {
