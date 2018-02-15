@@ -384,8 +384,10 @@ var controlTag = function (tag) {
 };
 
 var inputBlurHandler = function (evt) {
-  var hashtags = inputHashtag.value.toLowerCase().split(/ /);
-  controlTag(hashtags);
+  if (inputHashtag.value !== '') {
+    var hashtags = inputHashtag.value.toLowerCase().split(/ /);
+    controlTag(hashtags);
+  }
 
   if (test.hach !== CHANCE_ERROR) {
     evt.target.setCustomValidity('Хэш-теги должны начинаться с "#".');
