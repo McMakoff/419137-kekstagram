@@ -147,27 +147,7 @@ var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
 
 filterSlider.hidden = 'hidden';
 
-var toggleFilter = function (name) {
-  for (i = 0; i < FILTERS.length; i++) {
-    var className = PREFIX_EFFECT + FILTERS[i];
-    var classOn = imagePreview.classList.contains(className);
-
-    if (classOn === true) {
-      imagePreview.classList.remove(className);
-    }
-  }
-
-  if (name === FILTERS[0]) {
-    filterSlider.hidden = 'hidden';
-  } else {
-    filterSlider.removeAttribute('hidden');
-  }
-
-  imagePreview.classList.add(PREFIX_EFFECT + name);
-  applyFilter(DEPTH_EFFECT, name);
-};
-
-var applyFilter = function (scale, name) {
+var scaleEffect = function (scale) {
   var filter = {
     none: 'none',
     chrome: 'grayscale(' + String(scale) + ')',
@@ -177,6 +157,14 @@ var applyFilter = function (scale, name) {
     heat: 'brightness(' + String(scale * 3) + ')'
   };
 
+  valueEffectInput.value = Math.round(scale * 100);
+  valueEffectLine.style.width = valueEffectInput.value + '%';
+  pin.style.left = valueEffectInput.value + '%';
+
+  return filter;
+};
+
+var applyFilter = function (filter, name) {
   switch (name) {
     case FILTERS[1]:
       imagePreview.style.filter = filter.chrome;
@@ -196,10 +184,26 @@ var applyFilter = function (scale, name) {
     default:
       imagePreview.style.filter = filter.none;
   }
+};
 
-  valueEffectInput.value = Math.round(scale * 100);
-  valueEffectLine.style.width = valueEffectInput.value + '%';
-  pin.style.left = valueEffectInput.value + '%';
+var toggleFilter = function (name) {
+  for (i = 0; i < FILTERS.length; i++) {
+    var className = PREFIX_EFFECT + FILTERS[i];
+    var classOn = imagePreview.classList.contains(className);
+
+    if (classOn === true) {
+      imagePreview.classList.remove(className);
+    }
+  }
+
+  if (name === FILTERS[0]) {
+    filterSlider.hidden = 'hidden';
+  } else {
+    filterSlider.removeAttribute('hidden');
+  }
+
+  imagePreview.classList.add(PREFIX_EFFECT + name);
+  applyFilter(scaleEffect(DEPTH_EFFECT), name);
 };
 
 var effectClickHandler = function (evt) {
@@ -215,14 +219,14 @@ for (i = 0; i < effect.length; i++) {
 // Управление ползунком.
 
 var filterSliderMouseUpHandler = function (evt) {
-  var scaleFilter = (evt.clientX - startPin) / SIZE_CONTROL;
+  var force = (evt.clientX - startPin) / SIZE_CONTROL;
 
   for (i = 0; i < FILTERS.length; i++) {
     var className = PREFIX_EFFECT + FILTERS[i];
     var classOn = imagePreview.classList.contains(className);
 
     if (classOn === true) {
-      applyFilter(scaleFilter, FILTERS[i]);
+      applyFilter(scaleEffect(force), FILTERS[i]);
     }
   }
 };
