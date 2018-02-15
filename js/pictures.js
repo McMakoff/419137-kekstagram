@@ -147,16 +147,8 @@ var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
 
 filterSlider.hidden = 'hidden';
 
-var toggle = function (slider) {
-  if (slider === FILTERS[0]) {
-    filterSlider.hidden = 'hidden';
-  } else {
-    filterSlider.removeAttribute('hidden');
-  }
-};
-
-var purge = function (name) {
-  for (i = 0; i < name.length; i++) {
+var toggleFilter = function (name) {
+  for (i = 0; i < FILTERS.length; i++) {
     var className = PREFIX_EFFECT + FILTERS[i];
     var classOn = imagePreview.classList.contains(className);
 
@@ -164,6 +156,15 @@ var purge = function (name) {
       imagePreview.classList.remove(className);
     }
   }
+
+  if (name === FILTERS[0]) {
+    filterSlider.hidden = 'hidden';
+  } else {
+    filterSlider.removeAttribute('hidden');
+  }
+
+  imagePreview.classList.add(PREFIX_EFFECT + name);
+  applyFilter(DEPTH_EFFECT, name);
 };
 
 var applyFilter = function (scale, name) {
@@ -199,15 +200,12 @@ var applyFilter = function (scale, name) {
   valueEffectInput.value = Math.round(scale * 100);
   valueEffectLine.style.width = valueEffectInput.value + '%';
   pin.style.left = valueEffectInput.value + '%';
-  imagePreview.classList.add(PREFIX_EFFECT + name);
 };
 
 var effectClickHandler = function (evt) {
   var effectName = evt.target.parentElement.previousElementSibling.value;
 
-  purge(FILTERS);
-  toggle(effectName);
-  applyFilter(DEPTH_EFFECT, effectName);
+  toggleFilter(effectName);
 };
 
 for (i = 0; i < effect.length; i++) {
