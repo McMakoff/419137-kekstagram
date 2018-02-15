@@ -148,7 +148,9 @@ var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
 
 filterSlider.hidden = 'hidden';
 
-var scaleEffect = function (scale) {
+var scaleEffect = function (scal) {
+  var scale = scal / SIZE_CONTROL;
+
   var filter = {
     none: 'none',
     chrome: 'grayscale(' + scale + ')',
@@ -239,14 +241,9 @@ pin.addEventListener('mousedown', function (evt) {
     moveEvt.preventDefault();
 
     var shift = startCoords - moveEvt.clientX;
-
     startCoords = moveEvt.clientX;
 
-    if (startCoords < startPin || startCoords > startPin + SIZE_CONTROL - SIZE_PIN) {
-      pin.style.left = pin.offsetLeft + 'px';
-    } else {
-      pin.style.left = (pin.offsetLeft - shift) + 'px';
-    }
+    applyFilter(scaleEffect(pin.offsetLeft - shift));
   };
 
   var onMouseUp = function (upEvt) {
@@ -261,9 +258,9 @@ pin.addEventListener('mousedown', function (evt) {
 });
 
 var filterSliderMouseUpHandler = function (evt) {
-  var force = (evt.clientX - startPin) / SIZE_CONTROL;
+  var shift = (evt.clientX - startPin);
 
-  applyFilter(scaleEffect(force));
+  applyFilter(scaleEffect(shift));
 };
 
 filterSlider.addEventListener('mouseup', filterSliderMouseUpHandler);
