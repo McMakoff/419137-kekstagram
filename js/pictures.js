@@ -90,6 +90,7 @@ var ENTER_KEYCODE = 13;
 var uploadOverlay = document.querySelector('.upload-overlay');
 var uploadFile = document.querySelector('#upload-file');
 var uploadCancel = document.querySelector('#upload-cancel');
+var uploadDescription = document.querySelector('.upload-form-description');
 
 var closePopup = function () {
   uploadOverlay.classList.add('hidden');
@@ -122,9 +123,14 @@ uploadCancel.addEventListener('keydown', function (evt) {
   }
 });
 
+uploadDescription.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    evt.stopPropagation();
+  }
+});
+
 // Наложение эффекта на изображение.
 
-var DEPTH_EFFECT = 1;
 var PREFIX_EFFECT = 'effect-';
 var FILTERS = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
 var SIZE_CONTROL = 455;
@@ -140,34 +146,42 @@ var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
 
 filterSlider.hidden = 'hidden';
 
-var toggle = function (slider) {
-  if (slider === FILTERS[0]) {
-    filterSlider.hidden = 'hidden';
-  } else {
-    filterSlider.removeAttribute('hidden');
+var scaleEffect = function (scal) {
+  var scale = scal / SIZE_CONTROL;
+
+  var filter = {
+    none: 'none',
+    chrome: 'grayscale(' + scale + ')',
+    sepia: 'sepia(' + scale + ')',
+    marvin: 'invert(' + scale * 100 + '%)',
+    phobos: 'blur(' + scale * 3 + 'px)',
+    heat: 'brightness(' + scale * 3 + ')'
+  };
+
+  if (scale < 0) {
+    scale = 0;
+  } else if (scale > 1) {
+    scale = 1;
   }
+
+  valueEffectInput.value = Math.round(scale * 100);
+  valueEffectLine.style.width = valueEffectInput.value + '%';
+  pin.style.left = valueEffectInput.value + '%';
+
+  return filter;
 };
 
-var purge = function (name) {
-  for (i = 0; i < name.length; i++) {
+var applyFilter = function (filter) {
+  var name = FILTERS[0];
+
+  for (i = 0; i < FILTERS.length; i++) {
     var className = PREFIX_EFFECT + FILTERS[i];
     var classOn = imagePreview.classList.contains(className);
 
     if (classOn === true) {
-      imagePreview.classList.remove(className);
+      name = FILTERS[i];
     }
   }
-};
-
-var applyFilter = function (scale, name) {
-  var filter = {
-    none: 'none',
-    chrome: 'grayscale(' + String(scale) + ')',
-    sepia: 'sepia(' + String(scale) + ')',
-    marvin: 'invert(' + String(scale * 100) + '%)',
-    phobos: 'blur(' + String(scale * 3) + 'px)',
-    heat: 'brightness(' + String(scale * 3) + ')'
-  };
 
   switch (name) {
     case FILTERS[1]:
@@ -188,19 +202,32 @@ var applyFilter = function (scale, name) {
     default:
       imagePreview.style.filter = filter.none;
   }
+};
 
-  valueEffectInput.value = Math.round(scale * 100);
-  valueEffectLine.style.width = valueEffectInput.value + '%';
-  pin.style.left = valueEffectInput.value + '%';
+var toggleFilter = function (name) {
+  for (i = 0; i < FILTERS.length; i++) {
+    var className = PREFIX_EFFECT + FILTERS[i];
+    var classOn = imagePreview.classList.contains(className);
+
+    if (classOn === true) {
+      imagePreview.classList.remove(className);
+    }
+  }
+
+  if (name === FILTERS[0]) {
+    filterSlider.hidden = 'hidden';
+  } else {
+    filterSlider.removeAttribute('hidden');
+  }
+
   imagePreview.classList.add(PREFIX_EFFECT + name);
+  applyFilter(scaleEffect(SIZE_CONTROL));
 };
 
 var effectClickHandler = function (evt) {
   var effectName = evt.target.parentElement.previousElementSibling.value;
 
-  purge(FILTERS);
-  toggle(effectName);
-  applyFilter(DEPTH_EFFECT, effectName);
+  toggleFilter(effectName);
 };
 
 for (i = 0; i < effect.length; i++) {
@@ -209,17 +236,35 @@ for (i = 0; i < effect.length; i++) {
 
 // Управление ползунком.
 
+pin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = evt.clientX;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = startCoords - moveEvt.clientX;
+    startCoords = moveEvt.clientX;
+
+    applyFilter(scaleEffect(pin.offsetLeft - shift));
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
 var filterSliderMouseUpHandler = function (evt) {
-  var scaleFilter = (evt.clientX - startPin) / SIZE_CONTROL;
+  var shift = (evt.clientX - startPin);
 
-  for (i = 0; i < FILTERS.length; i++) {
-    var className = PREFIX_EFFECT + FILTERS[i];
-    var classOn = imagePreview.classList.contains(className);
-
-    if (classOn === true) {
-      applyFilter(scaleFilter, FILTERS[i]);
-    }
-  }
+  applyFilter(scaleEffect(shift));
 };
 
 filterSlider.addEventListener('mouseup', filterSliderMouseUpHandler);
@@ -234,8 +279,8 @@ var minus = document.querySelector('.upload-resize-controls-button-dec');
 var plus = document.querySelector('.upload-resize-controls-button-inc');
 var resizeControls = document.querySelector('.upload-resize-controls-value');
 
-imagePreview.style.transform = 'scale(' + String(FULL_RESIZE) + ')';
-resizeControls.value = String(resize * 100) + '%';
+imagePreview.style.transform = 'scale(' + FULL_RESIZE + ')';
+resizeControls.value = resize * 100 + '%';
 
 
 var resizeRise = function () {
@@ -243,8 +288,8 @@ var resizeRise = function () {
     resize += STEP_RESIZE;
   }
 
-  imagePreview.style.transform = 'scale(' + String(resize) + ')';
-  resizeControls.value = String(resize * 100) + '%';
+  imagePreview.style.transform = 'scale(' + resize + ')';
+  resizeControls.value = resize * 100 + '%';
 };
 
 var resizeDecline = function () {
@@ -252,8 +297,8 @@ var resizeDecline = function () {
     resize -= STEP_RESIZE;
   }
 
-  imagePreview.style.transform = 'scale(' + String(resize) + ')';
-  resizeControls.value = String(resize * 100) + '%';
+  imagePreview.style.transform = 'scale(' + resize + ')';
+  resizeControls.value = resize * 100 + '%';
 };
 
 plus.addEventListener('click', function () {
@@ -280,8 +325,8 @@ var pictureClickHandler = function (evt) {
   evt.preventDefault();
 
   var valueSrc = evt.target.src;
-  var valueComment = evt.target.textContent;
-  var valueLike = evt.target.textContent;
+  var valueComment = evt.target.nextElementSibling.firstElementChild.textContent;
+  var valueLike = evt.target.nextElementSibling.lastElementChild.textContent;
 
   galleryOverlay(valueSrc, valueComment, valueLike);
 };
@@ -289,3 +334,79 @@ var pictureClickHandler = function (evt) {
 for (i = 0; i < picture.length; i++) {
   picture[i].addEventListener('click', pictureClickHandler);
 }
+
+// Валидация формы.
+
+var NEW_HASHTAG = '#';
+var NORM_STROKE = 20;
+var NORM_HASHTAG = 5;
+var CHANCE_ERROR = 0;
+
+var inputHashtag = document.querySelector('.upload-form-hashtags');
+
+var test = {
+  hach: CHANCE_ERROR,
+  unique: CHANCE_ERROR,
+  amount: CHANCE_ERROR,
+  long: CHANCE_ERROR
+};
+
+var controlUnique = function (unique, stroke) {
+  if (unique.indexOf(stroke) === -1) {
+    unique.push(stroke);
+  }
+
+  return unique;
+};
+
+var controlTag = function (tag) {
+  var originals = [];
+
+  for (i = 0; i < tag.length; i++) {
+    var str = tag[i];
+
+    controlUnique(originals, str);
+
+    if (str.search(NEW_HASHTAG) !== 0) {
+      test.hach = test.hach + 1;
+    } if (str.length > NORM_STROKE) {
+      test.long = test.long + 1;
+    }
+  }
+
+  if (tag.length > NORM_HASHTAG) {
+    test.amount = test.amount + 1;
+  } if (tag.length > originals.length) {
+    test.unique = test.unique + 1;
+  }
+
+  return test;
+};
+
+var inputBlurHandler = function (evt) {
+  if (inputHashtag.value !== '') {
+    var hashtags = inputHashtag.value.toLowerCase().split(/ /);
+    controlTag(hashtags);
+  }
+
+  if (test.hach !== CHANCE_ERROR) {
+    evt.target.setCustomValidity('Хэш-теги должны начинаться с "#".');
+  } else if (test.long !== CHANCE_ERROR) {
+    evt.target.setCustomValidity('Длинна хэш-тега не более 20 символов.');
+  } else if (test.amount !== CHANCE_ERROR) {
+    evt.target.setCustomValidity('Введите не более 5 хэш-тегов.');
+  } else if (test.unique !== CHANCE_ERROR) {
+    evt.target.setCustomValidity('Хэш-теги не должны повторяться.');
+  } else {
+    evt.target.setCustomValidity('');
+  }
+
+  test = {
+    hach: CHANCE_ERROR,
+    unique: CHANCE_ERROR,
+    amount: CHANCE_ERROR,
+    long: CHANCE_ERROR
+  };
+};
+
+inputHashtag.addEventListener('blur', inputBlurHandler);
