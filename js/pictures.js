@@ -135,6 +135,7 @@ var DEPTH_EFFECT = 1;
 var PREFIX_EFFECT = 'effect-';
 var FILTERS = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
 var SIZE_CONTROL = 455;
+var SIZE_PIN = 18;
 var sizeWindow = document.documentElement.clientWidth;
 var startPin = (sizeWindow - SIZE_CONTROL) / 2;
 
@@ -228,6 +229,36 @@ for (i = 0; i < effect.length; i++) {
 }
 
 // Управление ползунком.
+
+pin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = evt.clientX;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = startCoords - moveEvt.clientX;
+
+    startCoords = moveEvt.clientX;
+
+    if (startCoords < startPin || startCoords > startPin + SIZE_CONTROL - SIZE_PIN) {
+      pin.style.left = pin.offsetLeft + 'px';
+    } else {
+      pin.style.left = (pin.offsetLeft - shift) + 'px';
+    }
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
 
 var filterSliderMouseUpHandler = function (evt) {
   var force = (evt.clientX - startPin) / SIZE_CONTROL;
