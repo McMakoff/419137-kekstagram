@@ -151,11 +151,11 @@ filterSlider.hidden = 'hidden';
 var scaleEffect = function (scale) {
   var filter = {
     none: 'none',
-    chrome: 'grayscale(' + String(scale) + ')',
-    sepia: 'sepia(' + String(scale) + ')',
-    marvin: 'invert(' + String(scale * 100) + '%)',
-    phobos: 'blur(' + String(scale * 3) + 'px)',
-    heat: 'brightness(' + String(scale * 3) + ')'
+    chrome: 'grayscale(' + scale + ')',
+    sepia: 'sepia(' + scale + ')',
+    marvin: 'invert(' + scale * 100 + '%)',
+    phobos: 'blur(' + scale * 3 + 'px)',
+    heat: 'brightness(' + scale * 3 + ')'
   };
 
   valueEffectInput.value = Math.round(scale * 100);
@@ -278,8 +278,8 @@ var minus = document.querySelector('.upload-resize-controls-button-dec');
 var plus = document.querySelector('.upload-resize-controls-button-inc');
 var resizeControls = document.querySelector('.upload-resize-controls-value');
 
-imagePreview.style.transform = 'scale(' + String(FULL_RESIZE) + ')';
-resizeControls.value = String(resize * 100) + '%';
+imagePreview.style.transform = 'scale(' + FULL_RESIZE + ')';
+resizeControls.value = resize * 100 + '%';
 
 
 var resizeRise = function () {
@@ -287,8 +287,8 @@ var resizeRise = function () {
     resize += STEP_RESIZE;
   }
 
-  imagePreview.style.transform = 'scale(' + String(resize) + ')';
-  resizeControls.value = String(resize * 100) + '%';
+  imagePreview.style.transform = 'scale(' + resize + ')';
+  resizeControls.value = resize * 100 + '%';
 };
 
 var resizeDecline = function () {
@@ -296,8 +296,8 @@ var resizeDecline = function () {
     resize -= STEP_RESIZE;
   }
 
-  imagePreview.style.transform = 'scale(' + String(resize) + ')';
-  resizeControls.value = String(resize * 100) + '%';
+  imagePreview.style.transform = 'scale(' + resize + ')';
+  resizeControls.value = resize * 100 + '%';
 };
 
 plus.addEventListener('click', function () {
