@@ -164,7 +164,18 @@ var scaleEffect = function (scale) {
   return filter;
 };
 
-var applyFilter = function (filter, name) {
+var applyFilter = function (filter) {
+  var name = FILTERS[0];
+
+  for (i = 0; i < FILTERS.length; i++) {
+    var className = PREFIX_EFFECT + FILTERS[i];
+    var classOn = imagePreview.classList.contains(className);
+
+    if (classOn === true) {
+      name = FILTERS[i];
+    }
+  }
+
   switch (name) {
     case FILTERS[1]:
       imagePreview.style.filter = filter.chrome;
@@ -203,7 +214,7 @@ var toggleFilter = function (name) {
   }
 
   imagePreview.classList.add(PREFIX_EFFECT + name);
-  applyFilter(scaleEffect(DEPTH_EFFECT), name);
+  applyFilter(scaleEffect(DEPTH_EFFECT));
 };
 
 var effectClickHandler = function (evt) {
@@ -221,14 +232,7 @@ for (i = 0; i < effect.length; i++) {
 var filterSliderMouseUpHandler = function (evt) {
   var force = (evt.clientX - startPin) / SIZE_CONTROL;
 
-  for (i = 0; i < FILTERS.length; i++) {
-    var className = PREFIX_EFFECT + FILTERS[i];
-    var classOn = imagePreview.classList.contains(className);
-
-    if (classOn === true) {
-      applyFilter(scaleEffect(force), FILTERS[i]);
-    }
-  }
+  applyFilter(scaleEffect(force));
 };
 
 filterSlider.addEventListener('mouseup', filterSliderMouseUpHandler);
