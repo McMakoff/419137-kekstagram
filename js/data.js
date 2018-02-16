@@ -2,20 +2,31 @@
 // Открытие и закрытие формы редактирования изображения.
 
 (function () {
-  var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadFile = document.querySelector('#upload-file');
-  var uploadCancel = document.querySelector('#upload-cancel');
+  var uploadClose = document.querySelector('#upload-cancel');
+  var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadDescription = document.querySelector('.upload-form-description');
+  var uploadHashtags = document.querySelector('.upload-form-hashtags');
+
+  var stopDefault = function (element) {
+    element.addEventListener('keydown', function (evt) {
+      window.util.isEscEvent(evt, function () {
+        evt.stopPropagation();
+      });
+    });
+  };
+
+  var openPopup = function () {
+    uploadOverlay.classList.remove('hidden');
+    stopDefault(uploadDescription);
+    stopDefault(uploadHashtags);
+    document.addEventListener('keydown', onPopupEscPress);
+  };
 
   var closePopup = function () {
     uploadOverlay.classList.add('hidden');
     uploadFile.value = '';
     document.removeEventListener('keydown', onPopupEscPress);
-  };
-
-  var openPopup = function () {
-    uploadOverlay.classList.remove('hidden');
-    document.addEventListener('keydown', onPopupEscPress);
   };
 
   var onPopupEscPress = function (evt) {
@@ -26,17 +37,11 @@
     openPopup();
   });
 
-  uploadCancel.addEventListener('click', function () {
+  uploadClose.addEventListener('click', function () {
     closePopup();
   });
 
-  uploadCancel.addEventListener('keydown', function (evt) {
+  uploadClose.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, closePopup);
-  });
-
-  uploadDescription.addEventListener('keydown', function (evt) {
-    window.util.isEscEvent(evt, function () {
-      evt.stopPropagation();
-    });
   });
 })();
