@@ -4,7 +4,7 @@
 (function () {
   var picture = document.querySelectorAll('.picture');
   var galleryCover = document.querySelector('.gallery-overlay');
-  var galleryClose = galleryCover.querySelectorAll('.gallery-overlay-close');
+  var galleryClose = galleryCover.querySelector('.gallery-overlay-close');
 
   var openPopup = function () {
     galleryCover.classList.remove('hidden');
