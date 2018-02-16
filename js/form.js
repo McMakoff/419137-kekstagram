@@ -11,17 +11,20 @@
   var startPin = (sizeWindow - SIZE_CONTROL) / 2;
   var resize = FULL_RESIZE;
 
-  var effect = document.querySelectorAll('.upload-effect-preview');
-  var imagePreview = document.querySelector('.effect-image-preview');
-  var filterSlider = document.querySelector('.upload-effect-level');
+  var uploadFile = document.querySelector('#upload-file');
+  var uploadOverlay = document.querySelector('.upload-overlay');
+  var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
+  var effect = uploadOverlay.querySelectorAll('.upload-effect-preview');
+  var filterSlider = uploadOverlay.querySelector('.upload-effect-level');
   var pin = filterSlider.querySelector('.upload-effect-level-pin');
   var valueEffectLine = filterSlider.querySelector('.upload-effect-level-val');
   var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
-  var minus = document.querySelector('.upload-resize-controls-button-dec');
-  var plus = document.querySelector('.upload-resize-controls-button-inc');
-  var resizeControls = document.querySelector('.upload-resize-controls-value');
-
-  filterSlider.hidden = 'hidden';
+  var minus = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
+  var plus = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
+  var resizeControls = uploadOverlay.querySelector('.upload-resize-controls-value');
+  var uploadClose = uploadOverlay.querySelector('#upload-cancel');
+  var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
+  var uploadHashtags = uploadOverlay.querySelector('.upload-form-hashtags');
 
   var scaleEffect = function (extent) {
     var scale = extent / SIZE_CONTROL;
@@ -178,12 +181,6 @@
   });
 
   // Открытие и закрытие формы редактирования изображения.
-
-  var uploadFile = document.querySelector('#upload-file');
-  var uploadClose = document.querySelector('#upload-cancel');
-  var uploadOverlay = document.querySelector('.upload-overlay');
-  var uploadDescription = document.querySelector('.upload-form-description');
-  var uploadHashtags = document.querySelector('.upload-form-hashtags');
 
   var stopDefault = function (element) {
     element.addEventListener('keydown', function (evt) {
