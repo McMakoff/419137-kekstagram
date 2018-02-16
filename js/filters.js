@@ -1,12 +1,15 @@
 'use strict';
-// Наложение эффекта на изображение.
+// Наложение фильтров на изображение.
 
 (function () {
+  var FULL_RESIZE = 1;
+  var STEP_RESIZE = 0.25;
   var PREFIX_EFFECT = 'effect-';
   var FILTERS = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
   var SIZE_CONTROL = 455;
   var sizeWindow = document.documentElement.clientWidth;
   var startPin = (sizeWindow - SIZE_CONTROL) / 2;
+  var resize = FULL_RESIZE;
 
   var effect = document.querySelectorAll('.upload-effect-preview');
   var imagePreview = document.querySelector('.effect-image-preview');
@@ -14,6 +17,9 @@
   var pin = filterSlider.querySelector('.upload-effect-level-pin');
   var valueEffectLine = filterSlider.querySelector('.upload-effect-level-val');
   var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
+  var minus = document.querySelector('.upload-resize-controls-button-dec');
+  var plus = document.querySelector('.upload-resize-controls-button-inc');
+  var resizeControls = document.querySelector('.upload-resize-controls-value');
 
   filterSlider.hidden = 'hidden';
 
@@ -142,17 +148,8 @@
 
   // Изменение размера изображения.
 
-  var FULL_RESIZE = 1;
-  var STEP_RESIZE = 0.25;
-  var resize = FULL_RESIZE;
-
-  var minus = document.querySelector('.upload-resize-controls-button-dec');
-  var plus = document.querySelector('.upload-resize-controls-button-inc');
-  var resizeControls = document.querySelector('.upload-resize-controls-value');
-
   imagePreview.style.transform = 'scale(' + FULL_RESIZE + ')';
   resizeControls.value = resize * 100 + '%';
-
 
   var resizeRise = function () {
     if (resize < FULL_RESIZE) {
