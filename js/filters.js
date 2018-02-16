@@ -23,8 +23,8 @@
 
   filterSlider.hidden = 'hidden';
 
-  var scaleEffect = function (scal) {
-    var scale = scal / SIZE_CONTROL;
+  var scaleEffect = function (extent) {
+    var scale = extent / SIZE_CONTROL;
 
     var filter = {
       none: 'none',
@@ -148,16 +148,19 @@
 
   // Изменение размера изображения.
 
-  imagePreview.style.transform = 'scale(' + FULL_RESIZE + ')';
-  resizeControls.value = resize * 100 + '%';
+  var applyResize = function (extent) {
+    imagePreview.style.transform = 'scale(' + extent + ')';
+    resizeControls.value = extent * 100 + '%';
+  };
+
+  applyResize(FULL_RESIZE);
 
   var resizeRise = function () {
     if (resize < FULL_RESIZE) {
       resize += STEP_RESIZE;
     }
 
-    imagePreview.style.transform = 'scale(' + resize + ')';
-    resizeControls.value = resize * 100 + '%';
+    applyResize(resize);
   };
 
   var resizeDecline = function () {
@@ -165,8 +168,7 @@
       resize -= STEP_RESIZE;
     }
 
-    imagePreview.style.transform = 'scale(' + resize + ')';
-    resizeControls.value = resize * 100 + '%';
+    applyResize(resize);
   };
 
   plus.addEventListener('click', function () {
