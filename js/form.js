@@ -52,18 +52,9 @@
   };
 
   var applyFilter = function (filter) {
-    var name = FILTERS[0];
+    var name = imagePreview.classList[1].split(PREFIX_EFFECT);
 
-    for (i = 0; i < FILTERS.length; i++) {
-      var className = PREFIX_EFFECT + FILTERS[i];
-      var classOn = imagePreview.classList.contains(className);
-
-      if (classOn === true) {
-        name = FILTERS[i];
-      }
-    }
-
-    switch (name) {
+    switch (name[1]) {
       case FILTERS[1]:
         imagePreview.style.filter = filter.chrome;
         break;
@@ -85,14 +76,8 @@
   };
 
   var toggleFilter = function (name) {
-    for (i = 0; i < FILTERS.length; i++) {
-      var className = PREFIX_EFFECT + FILTERS[i];
-      var classOn = imagePreview.classList.contains(className);
-
-      if (classOn === true) {
-        imagePreview.classList.remove(className);
-      }
-    }
+    var className = imagePreview.classList[1];
+    imagePreview.classList.remove(className);
 
     if (name === FILTERS[0]) {
       filterSlider.hidden = 'hidden';
