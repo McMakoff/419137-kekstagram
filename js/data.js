@@ -17,7 +17,7 @@
     return pictureElement;
   };
 
-  var successHandler = function (pictures) {
+  var loadHandler = function (pictures) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < PHOTO_NUMBER; i++) {
@@ -39,5 +39,5 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  window.load(successHandler, errorHandler);
+  window.load(loadHandler, errorHandler);
 })();
