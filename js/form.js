@@ -178,19 +178,23 @@
   };
 
   var reset = function () {
-    toggleFilter(FILTERS[0]);
-    applyResize(FULL_RESIZE);
-    resize = FULL_RESIZE;
     uploadFile.value = '';
+    resize = FULL_RESIZE;
     uploadDescription.value = '';
     uploadHashtags.value = '';
     noneEffect.checked = 'checked';
   };
 
-  var openPopup = function () {
-    uploadOverlay.classList.remove('hidden');
+  var resetDefault = function () {
+    toggleFilter(FILTERS[0]);
+    applyResize(FULL_RESIZE);
     prevent(uploadDescription);
     prevent(uploadHashtags);
+  };
+
+  var openPopup = function () {
+    resetDefault();
+    uploadOverlay.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
   };
 
@@ -217,7 +221,7 @@
   });
 
   form.addEventListener('submit', function (evt) {
-    window.upload(new FormData(form), closePopup);
+    window.upload(new FormData(form), closePopup, window.errorHandler);
     evt.preventDefault();
   });
 })();
