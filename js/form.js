@@ -7,6 +7,7 @@
   var PREFIX_EFFECT = 'effect-';
   var FILTERS = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
   var SIZE_CONTROL = 455;
+  var SIZE_PIN = 18;
   var sizeWindow = document.documentElement.clientWidth;
   var startPin = (sizeWindow - SIZE_CONTROL) / 2;
   var resize = FULL_RESIZE;
@@ -29,7 +30,7 @@
   var uploadHashtags = uploadOverlay.querySelector('.upload-form-hashtags');
 
   var scaleEffect = function (extent) {
-    var scale = extent / SIZE_CONTROL;
+    var scale = (extent / SIZE_CONTROL).toFixed(2);
 
     var filter = {
       none: 'none',
@@ -46,7 +47,7 @@
       scale = 1;
     }
 
-    valueEffectInput.value = Math.round(scale * 100);
+    valueEffectInput.value = scale * 100;
     valueEffectLine.style.width = valueEffectInput.value + '%';
     pin.style.left = valueEffectInput.value + '%';
 
@@ -54,9 +55,10 @@
   };
 
   var applyFilter = function (filter) {
-    var name = imagePreview.classList[1].split(PREFIX_EFFECT);
+    var index = imagePreview.classList.length - 1;
+    var name = imagePreview.classList[index].split(PREFIX_EFFECT).pop();
 
-    switch (name[1]) {
+    switch (name) {
       case FILTERS[1]:
         imagePreview.style.filter = filter.chrome;
         break;
@@ -78,8 +80,8 @@
   };
 
   var toggleFilter = function (name) {
-    var className = imagePreview.classList[1];
-    imagePreview.classList.remove(className);
+    var index = imagePreview.classList.length - 1;
+    imagePreview.classList.remove(imagePreview.classList[index]);
 
     if (name === FILTERS[0]) {
       filterSlider.hidden = 'hidden';
@@ -129,7 +131,7 @@
   });
 
   var filterSliderMouseUpHandler = function (evt) {
-    var shift = (evt.clientX - startPin);
+    var shift = evt.clientX - startPin + SIZE_PIN / 2;
 
     applyFilter(scaleEffect(shift));
   };
