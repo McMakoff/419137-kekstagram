@@ -3,12 +3,15 @@
 (function () {
   var URL = 'https://js.dump.academy/kekstagram';
   var URL_DATA = 'https://js.dump.academy/kekstagram/data';
+  var QUEST_STATUS_SUCCESS = 200;
+  var QUEST_TIMEOUT = 10000;
+  var REPORT_TIMEOUT = 3000;
 
   var direct = function (load, error, quest) {
     quest.responseType = 'json';
 
     quest.addEventListener('load', function () {
-      if (quest.status === 200) {
+      if (quest.status === QUEST_STATUS_SUCCESS) {
         load(quest.response);
       } else {
         error('Статус ответа: ' + quest.status + ' ' + quest.statusText);
@@ -23,26 +26,18 @@
       error('Запрос не успел выполниться за ' + quest.timeout + 'мс');
     });
 
-    quest.timeout = 10000; // 10s
+    quest.timeout = QUEST_TIMEOUT;
   };
 
   window.errorHandler = function (errorMessage) {
     var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: #a32417; color: #ece9aa';
-    node.style.position = 'absolute';
-    node.style.top = '35%';
-    node.style.width = '400px';
-    node.style.padding = '35px';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
+    node.classList.add('error');
     node.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', node);
 
     setTimeout(function () {
       node.remove();
-    }, 3000);
+    }, REPORT_TIMEOUT);
   };
 
   window.load = function (onLoad, onError) {

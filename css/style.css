@@ -874,3 +874,23 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
 .footer-social-item-vk {
   background-position: -84px 0;
 }
+
+/* Сообщение об ошибках связи */
+
+.error {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  z-index: 100;
+
+  width: 400px;
+  padding: 35px;
+
+  font-size: 30px;
+  text-align: center;
+  color: #ece9aa;
+
+  background-color: #a32417;
+  transform: translate(-50%, -50%);
+}
+
