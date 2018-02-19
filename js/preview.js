@@ -2,9 +2,9 @@
 // Показ изображения в полноэкранном режиме.
 
 (function () {
-  var picture = document.querySelectorAll('.picture');
+  var pictureList = document.querySelector('.pictures');
   var galleryCover = document.querySelector('.gallery-overlay');
-  var galleryClose = galleryCover.querySelectorAll('.gallery-overlay-close');
+  var galleryClose = galleryCover.querySelector('.gallery-overlay-close');
 
   var openPopup = function () {
     galleryCover.classList.remove('hidden');
@@ -29,9 +29,7 @@
     galleryOverlay(valueSrc, valueComment, valueLike);
   };
 
-  for (var i = 0; i < picture.length; i++) {
-    picture[i].addEventListener('click', pictureClickHandler);
-  }
+  pictureList.addEventListener('click', pictureClickHandler);
 
   var closePopup = function () {
     galleryCover.classList.add('hidden');

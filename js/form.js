@@ -15,6 +15,7 @@
   var uploadOverlay = document.querySelector('.upload-overlay');
   var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
   var effect = uploadOverlay.querySelectorAll('.upload-effect-preview');
+  var noneEffect = uploadOverlay.querySelector('#upload-effect-none');
   var filterSlider = uploadOverlay.querySelector('.upload-effect-level');
   var pin = filterSlider.querySelector('.upload-effect-level-pin');
   var valueEffectLine = filterSlider.querySelector('.upload-effect-level-val');
@@ -23,6 +24,7 @@
   var plus = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
   var resizeControls = uploadOverlay.querySelector('.upload-resize-controls-value');
   var uploadClose = uploadOverlay.querySelector('#upload-cancel');
+  var form = document.querySelector('#upload-select-image');
   var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
   var uploadHashtags = uploadOverlay.querySelector('.upload-form-hashtags');
 
@@ -167,7 +169,7 @@
 
   // Открытие и закрытие формы редактирования изображения.
 
-  var stopDefault = function (element) {
+  var prevent = function (element) {
     element.addEventListener('keydown', function (evt) {
       window.util.isEscEvent(evt, function () {
         evt.stopPropagation();
@@ -175,22 +177,29 @@
     });
   };
 
-  var resetFilter = function () {
+  var reset = function () {
+    uploadFile.value = '';
     resize = FULL_RESIZE;
-    applyResize(FULL_RESIZE);
+    uploadDescription.value = '';
+    uploadHashtags.value = '';
+    noneEffect.checked = 'checked';
+  };
+
+  var resetDefault = function () {
     toggleFilter(FILTERS[0]);
+    applyResize(FULL_RESIZE);
+    prevent(uploadDescription);
+    prevent(uploadHashtags);
   };
 
   var openPopup = function () {
-    resetFilter();
+    resetDefault();
     uploadOverlay.classList.remove('hidden');
-    stopDefault(uploadDescription);
-    stopDefault(uploadHashtags);
     document.addEventListener('keydown', onPopupEscPress);
   };
 
   var closePopup = function () {
-    uploadFile.value = '';
+    reset();
     uploadOverlay.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
   };
@@ -209,5 +218,10 @@
 
   uploadClose.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, closePopup);
+  });
+
+  form.addEventListener('submit', function (evt) {
+    window.upload(new FormData(form), closePopup, window.errorHandler);
+    evt.preventDefault();
   });
 })();
