@@ -17,15 +17,76 @@
     return pictureElement;
   };
 
-  var loadHandler = function (pictures) {
+  var render = function (data) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < PHOTO_NUMBER; i++) {
-      fragment.appendChild(renderPicture(pictures[i]));
+      fragment.appendChild(renderPicture(data[i]));
     }
 
     pictureList.appendChild(fragment);
   };
 
+  // Сортировка
+
+  var filter = document.querySelector('.filters');
+  var recommend = document.querySelector('#filter-recommend');
+  var populars = document.querySelector('#filter-popular');
+  var discussed = document.querySelector('#filter-discussed');
+  var random = document.querySelector('#filter-random');
+  var pictures = [];
+  var h = 0;
+
+  var getRank = function (picture) {
+    var url = picture.url;
+    var index = url.length - 4;
+    url = url.substring(7, index);
+    var rank = {
+      recommend: url * -1,
+      popular: picture.likes,
+      discussed: picture.comments.length,
+      random: Math.random()
+    };
+    h = 'random';
+    rank = rank[h];
+
+    return rank;
+  };
+
+  var updatePictures = function () {
+    pictures.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      return rankDiff;
+    });
+  };
+
+  var loadHandler = function (data) {
+    pictures = data;
+    updatePictures();
+
+    render(pictures);
+    filter.classList.remove('filters-inactive');
+  };
+
   window.load(loadHandler, window.errorHandler);
+
+  // var recommendSelect = function {
+
+  // }
+
+  var popularSelect = function () {
+    h = 'popular';
+    updatePictures();
+  };
+
+  // var discussedSelect = function {
+
+  // };
+
+  // var randomSelect = function {
+
+  // };
+
+  populars.addEventListener('click', popularSelect);
+
 })();
