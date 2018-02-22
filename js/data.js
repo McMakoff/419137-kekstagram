@@ -28,65 +28,47 @@
   };
 
   // Сортировка
-
-  var filter = document.querySelector('.filters');
-  var recommend = document.querySelector('#filter-recommend');
-  var populars = document.querySelector('#filter-popular');
-  var discussed = document.querySelector('#filter-discussed');
-  var random = document.querySelector('#filter-random');
+  var sorting = 'recommend';
   var pictures = [];
-  var h = 0;
+
+  var selection = document.querySelector('.filters');
 
   var getRank = function (picture) {
     var url = picture.url;
     var index = url.length - 4;
     url = url.substring(7, index);
+
     var rank = {
       recommend: url * -1,
       popular: picture.likes,
       discussed: picture.comments.length,
       random: Math.random()
     };
-    h = 'random';
-    rank = rank[h];
+
+    rank = rank[sorting];
 
     return rank;
   };
 
   var updatePictures = function () {
-    pictures.sort(function (left, right) {
+    render(pictures.sort(function (left, right) {
       var rankDiff = getRank(right) - getRank(left);
       return rankDiff;
-    });
+    }));
   };
+
+  var selectionClickHandler = function (evt) {
+    sorting = evt.target.value;
+    window.debounce(updatePictures);
+  };
+
+  selection.addEventListener('change', selectionClickHandler);
 
   var loadHandler = function (data) {
     pictures = data;
     updatePictures();
-
-    render(pictures);
-    filter.classList.remove('filters-inactive');
+    selection.classList.remove('filters-inactive');
   };
 
   window.load(loadHandler, window.errorHandler);
-
-  // var recommendSelect = function {
-
-  // }
-
-  var popularSelect = function () {
-    h = 'popular';
-    updatePictures();
-  };
-
-  // var discussedSelect = function {
-
-  // };
-
-  // var randomSelect = function {
-
-  // };
-
-  populars.addEventListener('click', popularSelect);
-
 })();
