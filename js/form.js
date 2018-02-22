@@ -1,36 +1,38 @@
 'use strict';
-// Наложение фильтров на изображение.
 
 (function () {
   var FULL_RESIZE = 1;
   var STEP_RESIZE = 0.25;
   var PREFIX_EFFECT = 'effect-';
-  var FILTERS = ['none', 'chrome', 'sepia', 'marvin', 'phobos', 'heat'];
-  var SIZE_CONTROL = 455;
-  var SIZE_PIN = 18;
-  var sizeWindow = document.documentElement.clientWidth;
-  var startPin = (sizeWindow - SIZE_CONTROL) / 2;
+  var ORIGINAL_EFFECT = 'none';
+  var CONTROL_SIZE = 455;
+  var PIN_SIZE = 18;
+  var startPin = (document.documentElement.clientWidth - CONTROL_SIZE) / 2;
   var resize = FULL_RESIZE;
 
+  var form = document.querySelector('#upload-select-image');
   var uploadFile = document.querySelector('#upload-file');
   var uploadOverlay = document.querySelector('.upload-overlay');
-  var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
-  var effect = uploadOverlay.querySelectorAll('.upload-effect-preview');
-  var noneEffect = uploadOverlay.querySelector('#upload-effect-none');
-  var filterSlider = uploadOverlay.querySelector('.upload-effect-level');
-  var pin = filterSlider.querySelector('.upload-effect-level-pin');
-  var valueEffectLine = filterSlider.querySelector('.upload-effect-level-val');
-  var valueEffectInput = filterSlider.querySelector('.upload-effect-level-value');
-  var minus = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
-  var plus = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
-  var resizeControls = uploadOverlay.querySelector('.upload-resize-controls-value');
   var uploadClose = uploadOverlay.querySelector('#upload-cancel');
-  var form = document.querySelector('#upload-select-image');
-  var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
-  var uploadHashtags = uploadOverlay.querySelector('.upload-form-hashtags');
+  var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
+  var effect = uploadOverlay.querySelectorAll('input[name=effect]');
+  var defaultEffect = uploadOverlay.querySelector('#upload-effect-none');
+  var slider = uploadOverlay.querySelector('.upload-effect-level');
+  var sliderInput = slider.querySelector('.upload-effect-level-value');
+  var sliderLine = slider.querySelector('.upload-effect-level-val');
+  var pin = slider.querySelector('.upload-effect-level-pin');
+  var plus = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
+  var minus = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
+  var resizeValue = uploadOverlay.querySelector('.upload-resize-controls-value');
+  var inputHashtag = uploadOverlay.querySelector('.upload-form-hashtags');
+  var inputDescription = uploadOverlay.querySelector('.upload-form-description');
 
-  var scaleEffect = function (extent) {
-    var scale = (extent / SIZE_CONTROL).toFixed(2);
+  // Применение эффектов к изображению.
+
+  var effectScale = function (extent) {
+    var index = imagePreview.classList.length - 1;
+    var name = imagePreview.classList[index].split(PREFIX_EFFECT).pop();
+    var scale = (extent / CONTROL_SIZE).toFixed(2);
 
     var filter = {
       none: 'none',
@@ -47,60 +49,34 @@
       scale = 1;
     }
 
-    valueEffectInput.value = scale * 100;
-    valueEffectLine.style.width = valueEffectInput.value + '%';
-    pin.style.left = valueEffectInput.value + '%';
-
-    return filter;
+    imagePreview.style.filter = filter[name];
+    sliderInput.value = scale * 100;
+    sliderLine.style.width = sliderInput.value + '%';
+    pin.style.left = sliderInput.value + '%';
   };
 
-  var applyFilter = function (filter) {
-    var index = imagePreview.classList.length - 1;
-    var name = imagePreview.classList[index].split(PREFIX_EFFECT).pop();
-
-    switch (name) {
-      case FILTERS[1]:
-        imagePreview.style.filter = filter.chrome;
-        break;
-      case FILTERS[2]:
-        imagePreview.style.filter = filter.sepia;
-        break;
-      case FILTERS[3]:
-        imagePreview.style.filter = filter.marvin;
-        break;
-      case FILTERS[4]:
-        imagePreview.style.filter = filter.phobos;
-        break;
-      case FILTERS[5]:
-        imagePreview.style.filter = filter.heat;
-        break;
-      default:
-        imagePreview.style.filter = filter.none;
-    }
-  };
-
-  var toggleFilter = function (name) {
+  var effectToggle = function (name) {
     var index = imagePreview.classList.length - 1;
     imagePreview.classList.remove(imagePreview.classList[index]);
 
-    if (name === FILTERS[0]) {
-      filterSlider.hidden = 'hidden';
+    if (name === ORIGINAL_EFFECT) {
+      slider.hidden = 'hidden';
     } else {
-      filterSlider.removeAttribute('hidden');
+      slider.removeAttribute('hidden');
     }
 
     imagePreview.classList.add(PREFIX_EFFECT + name);
-    applyFilter(scaleEffect(SIZE_CONTROL));
+    effectScale(CONTROL_SIZE);
   };
 
   var effectClickHandler = function (evt) {
-    var effectName = evt.target.parentElement.previousElementSibling.value;
+    var effectName = evt.target.value;
 
-    toggleFilter(effectName);
+    effectToggle(effectName);
   };
 
   for (var i = 0; i < effect.length; i++) {
-    effect[i].addEventListener('click', effectClickHandler);
+    effect[i].addEventListener('change', effectClickHandler);
   }
 
   // Управление ползунком.
@@ -116,7 +92,7 @@
       var shift = startCoords - moveEvt.clientX;
       startCoords = moveEvt.clientX;
 
-      applyFilter(scaleEffect(pin.offsetLeft - shift));
+      effectScale(pin.offsetLeft - shift);
     };
 
     var onMouseUp = function (upEvt) {
@@ -130,43 +106,35 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  var filterSliderMouseUpHandler = function (evt) {
-    var shift = evt.clientX - startPin + SIZE_PIN / 2;
+  var sliderMouseUpHandler = function (evt) {
+    var shift = evt.clientX - startPin + PIN_SIZE / 2;
 
-    applyFilter(scaleEffect(shift));
+    effectScale(shift);
   };
 
-  filterSlider.addEventListener('mouseup', filterSliderMouseUpHandler);
+  slider.addEventListener('mouseup', sliderMouseUpHandler);
 
   // Изменение размера изображения.
 
-  var applyResize = function (extent) {
-    imagePreview.style.transform = 'scale(' + extent + ')';
-    resizeControls.value = (extent * 100) + '%';
-  };
+  var applyResize = function (opposite) {
+    resize += STEP_RESIZE * opposite;
 
-  var resizeRise = function () {
-    if (resize < FULL_RESIZE) {
-      resize += STEP_RESIZE;
+    if (resize < STEP_RESIZE) {
+      resize = STEP_RESIZE;
+    } else if (resize > FULL_RESIZE) {
+      resize = FULL_RESIZE;
     }
 
-    applyResize(resize);
-  };
-
-  var resizeDecline = function () {
-    if (resize > STEP_RESIZE) {
-      resize -= STEP_RESIZE;
-    }
-
-    applyResize(resize);
+    imagePreview.style.transform = 'scale(' + resize + ')';
+    resizeValue.value = (resize * 100) + '%';
   };
 
   plus.addEventListener('click', function () {
-    resizeRise();
+    applyResize(FULL_RESIZE);
   });
 
   minus.addEventListener('click', function () {
-    resizeDecline();
+    applyResize(-FULL_RESIZE);
   });
 
   // Открытие и закрытие формы редактирования изображения.
@@ -179,29 +147,29 @@
     });
   };
 
-  var reset = function () {
-    uploadFile.value = '';
-    resize = FULL_RESIZE;
-    uploadDescription.value = '';
-    uploadHashtags.value = '';
-    noneEffect.checked = 'checked';
+  var defaultSetup = function () {
+    effectToggle(ORIGINAL_EFFECT);
+    applyResize(FULL_RESIZE);
+    prevent(inputDescription);
+    prevent(inputHashtag);
   };
 
-  var resetDefault = function () {
-    toggleFilter(FILTERS[0]);
-    applyResize(FULL_RESIZE);
-    prevent(uploadDescription);
-    prevent(uploadHashtags);
+  var resetSetup = function () {
+    uploadFile.value = '';
+    resize = FULL_RESIZE;
+    inputDescription.value = '';
+    inputHashtag.value = '';
+    defaultEffect.checked = 'checked';
   };
 
   var openPopup = function () {
-    resetDefault();
+    defaultSetup();
     uploadOverlay.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
   };
 
   var closePopup = function () {
-    reset();
+    resetSetup();
     uploadOverlay.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
   };
