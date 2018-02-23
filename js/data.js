@@ -28,7 +28,8 @@
   };
 
   // Сортировка
-  var sorting = 'recommend';
+
+  var sorting = 'popular';
   var pictures = [];
 
   var selection = document.querySelector('.filters');
@@ -51,10 +52,13 @@
   };
 
   var updatePictures = function () {
-    render(pictures.sort(function (left, right) {
+    var clone = pictures;
+    var sorted = clone.sort(function (left, right) {
       var rankDiff = getRank(right) - getRank(left);
       return rankDiff;
-    }));
+    });
+
+    render(sorted);
   };
 
   var selectionClickHandler = function (evt) {
@@ -66,7 +70,7 @@
 
   var loadHandler = function (data) {
     pictures = data;
-    updatePictures();
+    render(pictures);
     selection.classList.remove('filters-inactive');
   };
 
