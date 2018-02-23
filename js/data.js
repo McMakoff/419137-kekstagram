@@ -1,46 +1,21 @@
 'use strict';
-// Отрисовка галереи изображений
+// Сортировка
 
 (function () {
-  var PHOTO_NUMBER = 26;
-
-  var pictureTemplate = document.querySelector('#picture-template').content;
-  var pictureList = document.querySelector('.pictures');
-
-  var renderPicture = function (picture) {
-    var pictureElement = pictureTemplate.cloneNode(true);
-
-    pictureElement.querySelector('.picture img').src = picture.url;
-    pictureElement.querySelector('.picture-likes').textContent = picture.likes;
-    pictureElement.querySelector('.picture-comments').textContent = picture.comments.length;
-
-    return pictureElement;
-  };
-
-  var render = function (data) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < PHOTO_NUMBER; i++) {
-      fragment.appendChild(renderPicture(data[i]));
-    }
-
-    pictureList.appendChild(fragment);
-  };
-
-  // Сортировка
-
-  var sorting = 'popular';
+  var sorting = 'recommend';
   var pictures = [];
 
   var selection = document.querySelector('.filters');
+  var pictureList = document.querySelector('.pictures');
+
+  var removeChildren = function (elem) {
+    while (elem.lastChild) {
+      elem.removeChild(elem.lastChild);
+    }
+  };
 
   var getRank = function (picture) {
-    var url = picture.url;
-    var index = url.length - 4;
-    url = url.substring(7, index);
-
     var rank = {
-      recommend: url * -1,
       popular: picture.likes,
       discussed: picture.comments.length,
       random: Math.random()
@@ -52,25 +27,29 @@
   };
 
   var updatePictures = function () {
-    var clone = pictures;
-    var sorted = clone.sort(function (left, right) {
-      var rankDiff = getRank(right) - getRank(left);
-      return rankDiff;
-    });
+    var sorted = pictures.slice(0);
 
-    render(sorted);
+    if (sorting === 'recommend') {
+      window.render(pictures);
+    } else {
+      window.render(sorted.sort(function (left, right) {
+        var rankDiff = getRank(right) - getRank(left);
+        return rankDiff;
+      }));
+    }
   };
 
   var selectionClickHandler = function (evt) {
     sorting = evt.target.value;
+    removeChildren(pictureList);
     window.debounce(updatePictures);
   };
 
-  selection.addEventListener('change', selectionClickHandler);
+  selection.addEventListener('click', selectionClickHandler);
 
   var loadHandler = function (data) {
     pictures = data;
-    render(pictures);
+    window.render(pictures);
     selection.classList.remove('filters-inactive');
   };
 
