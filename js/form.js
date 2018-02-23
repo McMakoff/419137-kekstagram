@@ -191,7 +191,7 @@
   });
 
   form.addEventListener('submit', function (evt) {
-    window.upload(new FormData(form), closePopup, window.errorHandler);
+    window.backend.upload(new FormData(form), closePopup, window.backend.errorHandler);
     evt.preventDefault();
   });
 })();

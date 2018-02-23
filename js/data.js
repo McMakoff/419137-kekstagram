@@ -53,5 +53,5 @@
     selection.classList.remove('filters-inactive');
   };
 
-  window.load(loadHandler, window.errorHandler);
+  window.backend.load(loadHandler, window.backend.errorHandler);
 })();
