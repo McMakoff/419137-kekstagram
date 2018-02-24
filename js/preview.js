@@ -22,7 +22,7 @@
   var pictureClickHandler = function (evt) {
     evt.preventDefault();
 
-    var valueSrc = evt.target.src;
+    var valueSrc = evt.target.parentElement.querySelector('img').src;
     var valueComment = evt.target.parentElement.querySelector('.picture-comments').textContent;
     var valueLike = evt.target.parentElement.querySelector('.picture-likes').textContent;
 

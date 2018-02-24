@@ -30,17 +30,16 @@
   // Применение эффектов к изображению.
 
   var effectScale = function (extent) {
-    var index = imagePreview.classList.length - 1;
-    var name = imagePreview.classList[index].split(PREFIX_EFFECT).pop();
+    var name = imagePreview.className.split(/ /).pop();
     var scale = (extent / CONTROL_SIZE).toFixed(2);
 
     var filter = {
-      none: 'none',
-      chrome: 'grayscale(' + scale + ')',
-      sepia: 'sepia(' + scale + ')',
-      marvin: 'invert(' + scale * 100 + '%)',
-      phobos: 'blur(' + scale * 3 + 'px)',
-      heat: 'brightness(' + scale * 3 + ')'
+      'effect-none': 'none',
+      'effect-chrome': 'grayscale(' + scale + ')',
+      'effect-sepia': 'sepia(' + scale + ')',
+      'effect-marvin': 'invert(' + scale * 100 + '%)',
+      'effect-phobos': 'blur(' + scale * 3 + 'px)',
+      'effect-heat': 'brightness(' + scale * 3 + ')'
     };
 
     if (scale < 0) {
@@ -56,8 +55,7 @@
   };
 
   var effectToggle = function (name) {
-    var index = imagePreview.classList.length - 1;
-    imagePreview.classList.remove(imagePreview.classList[index]);
+    imagePreview.classList.remove(imagePreview.className.split(/ /).pop());
 
     if (name === ORIGINAL_EFFECT) {
       slider.hidden = 'hidden';
