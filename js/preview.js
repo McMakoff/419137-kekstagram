@@ -1,5 +1,5 @@
 'use strict';
-// Показ изображения в полноэкранном режиме.
+// Показ изображения в полном размере.
 
 (function () {
   var pictureList = document.querySelector('.pictures');
@@ -22,9 +22,9 @@
   var pictureClickHandler = function (evt) {
     evt.preventDefault();
 
-    var valueSrc = evt.target.src;
-    var valueComment = evt.target.nextElementSibling.firstElementChild.textContent;
-    var valueLike = evt.target.nextElementSibling.lastElementChild.textContent;
+    var valueSrc = evt.target.parentElement.querySelector('img').src;
+    var valueComment = evt.target.parentElement.querySelector('.picture-comments').textContent;
+    var valueLike = evt.target.parentElement.querySelector('.picture-likes').textContent;
 
     galleryOverlay(valueSrc, valueComment, valueLike);
   };

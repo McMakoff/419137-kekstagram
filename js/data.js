@@ -1,31 +1,57 @@
 'use strict';
-// Отрисовка галереи изображений
+// Сортировка
 
 (function () {
-  var PHOTO_NUMBER = 26;
+  var sorting = 'recommend';
+  var pictures = [];
 
-  var pictureTemplate = document.querySelector('#picture-template').content;
+  var selection = document.querySelector('.filters');
   var pictureList = document.querySelector('.pictures');
 
-  var renderPicture = function (picture) {
-    var pictureElement = pictureTemplate.cloneNode(true);
-
-    pictureElement.querySelector('.picture img').src = picture.url;
-    pictureElement.querySelector('.picture-likes').textContent = picture.likes;
-    pictureElement.querySelector('.picture-comments').textContent = picture.comments.length;
-
-    return pictureElement;
-  };
-
-  var loadHandler = function (pictures) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < PHOTO_NUMBER; i++) {
-      fragment.appendChild(renderPicture(pictures[i]));
+  var removeChildren = function (elem) {
+    while (elem.lastChild) {
+      elem.removeChild(elem.lastChild);
     }
-
-    pictureList.appendChild(fragment);
   };
 
-  window.load(loadHandler, window.errorHandler);
+  var getRank = function (picture) {
+    var rank = {
+      popular: picture.likes,
+      discussed: picture.comments.length,
+      random: Math.random()
+    };
+
+    rank = rank[sorting];
+
+    return rank;
+  };
+
+  var updatePictures = function () {
+    var sorted = pictures.slice(0);
+
+    if (sorting === 'recommend') {
+      window.render(pictures);
+    } else {
+      window.render(sorted.sort(function (left, right) {
+        var rankDiff = getRank(right) - getRank(left);
+        return rankDiff;
+      }));
+    }
+  };
+
+  var selectionClickHandler = function (evt) {
+    sorting = evt.target.value;
+    removeChildren(pictureList);
+    window.debounce(updatePictures);
+  };
+
+  selection.addEventListener('click', selectionClickHandler);
+
+  var loadHandler = function (data) {
+    pictures = data;
+    window.render(pictures);
+    selection.classList.remove('filters-inactive');
+  };
+
+  window.backend.load(loadHandler, window.backend.errorHandler);
 })();

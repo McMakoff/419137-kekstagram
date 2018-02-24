@@ -32,27 +32,24 @@
 
       controlUnique(originals, str);
 
-      if (str.search(NEW_HASHTAG) !== 0) {
-        test.hach = test.hach + 1;
+      if (str[0] !== NEW_HASHTAG) {
+        test.hach++;
       } if (str.length > NORM_STROKE) {
-        test.long = test.long + 1;
+        test.long++;
       }
     }
 
     if (tag.length > NORM_HASHTAG) {
-      test.amount = test.amount + 1;
+      test.amount++;
     } if (tag.length > originals.length) {
-      test.unique = test.unique + 1;
+      test.unique++;
     }
 
     return test;
   };
 
-  var inputBlurHandler = function (evt) {
-    if (inputHashtag.value !== '') {
-      var hashtags = inputHashtag.value.toLowerCase().split(/ /);
-      controlTag(hashtags);
-    }
+  var inputHashtagСhangeHandler = function (evt) {
+    controlTag(inputHashtag.value.toLowerCase().split(/\s{1,5}/));
 
     if (test.hach !== CHANCE_ERROR) {
       evt.target.setCustomValidity('Хэш-теги должны начинаться с "#".');
@@ -74,5 +71,5 @@
     };
   };
 
-  inputHashtag.addEventListener('blur', inputBlurHandler);
+  inputHashtag.addEventListener('change', inputHashtagСhangeHandler);
 })();
