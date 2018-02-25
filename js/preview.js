@@ -19,7 +19,7 @@
     openPopup();
   };
 
-  var pictureClickHandler = function (evt) {
+  var onPictureClick = function (evt) {
     evt.preventDefault();
 
     var valueSrc = evt.target.parentElement.querySelector('img').src;
@@ -29,7 +29,7 @@
     galleryOverlay(valueSrc, valueComment, valueLike);
   };
 
-  pictureList.addEventListener('click', pictureClickHandler);
+  pictureList.addEventListener('click', onPictureClick);
 
   var closePopup = function () {
     galleryCover.classList.add('hidden');

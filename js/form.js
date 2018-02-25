@@ -67,12 +67,12 @@
     effectScale(CONTROL_SIZE);
   };
 
-  var selectionClickHandler = function (evt) {
+  var onSelectionClick = function (evt) {
     effect = evt.target.value;
     effectToggle();
   };
 
-  selection.addEventListener('change', selectionClickHandler);
+  selection.addEventListener('change', onSelectionClick);
 
   var onSelectionEnterPress = function () {
     selection.addEventListener('keydown', function (evt) {
@@ -111,13 +111,13 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  var sliderMouseUpHandler = function (evt) {
+  var onSliderMouseUp = function (evt) {
     var shift = evt.clientX - startPin + PIN_SIZE / 2;
 
     effectScale(shift);
   };
 
-  slider.addEventListener('mouseup', sliderMouseUpHandler);
+  slider.addEventListener('mouseup', onSliderMouseUp);
 
   // Изменение размера изображения.
 
@@ -199,7 +199,7 @@
   });
 
   form.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(form), closePopup, window.backend.errorHandler);
+    window.backend.upload(new FormData(form), closePopup, window.backend.onError);
     evt.preventDefault();
   });
 })();

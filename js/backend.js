@@ -30,7 +30,7 @@
   };
 
   window.backend = {
-    errorHandler: function (errorMessage) {
+    onError: function (errorMessage) {
       var node = document.createElement('div');
       node.classList.add('error');
       node.textContent = errorMessage;
