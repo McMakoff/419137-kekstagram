@@ -6,7 +6,6 @@
   var PREFIX_EFFECT = 'effect-';
   var ORIGINAL_EFFECT = 'none';
   var CONTROL_SIZE = 455;
-  var PIN_SIZE = 18;
   var startPin = (document.documentElement.clientWidth - CONTROL_SIZE) / 2;
   var resize = FULL_RESIZE;
   var effect = ORIGINAL_EFFECT;
@@ -17,8 +16,7 @@
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadClose = uploadOverlay.querySelector('#upload-cancel');
   var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
-  var selection = uploadOverlay.querySelector('.upload-effect');
-  var defaultEffect = uploadOverlay.querySelector('#upload-effect-none');
+  var selection = uploadOverlay.querySelector('.upload-effect-controls');
   var slider = uploadOverlay.querySelector('.upload-effect-level');
   var sliderInput = slider.querySelector('.upload-effect-level-value');
   var sliderLine = slider.querySelector('.upload-effect-level-val');
@@ -78,9 +76,7 @@
   var onSelectionEnterPress = function () {
     selection.addEventListener('keydown', function (evt) {
       window.util.isEnterEvent(evt, function () {
-        evt.target.previousElementSibling.checked = 'checked';
-        effect = evt.target.previousElementSibling.value;
-        effectToggle();
+        evt.target.previousElementSibling.click();
       });
     });
   };
@@ -113,7 +109,7 @@
   });
 
   var onSliderMouseUp = function (evt) {
-    var shift = evt.clientX - startPin + PIN_SIZE / 2;
+    var shift = evt.clientX - startPin;
 
     effectScale(shift);
   };
@@ -151,6 +147,11 @@
         evt.stopPropagation();
       });
     });
+    element.addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, function () {
+        evt.preventDefault();
+      });
+    });
   };
 
   var defaultSetup = function () {
@@ -166,7 +167,6 @@
     effect = ORIGINAL_EFFECT;
     inputDescription.value = '';
     inputHashtag.value = '';
-    defaultEffect.checked = 'checked';
   };
 
   var openPopup = function () {

@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var URL = 'https://js.dump.academy/kekstagram';
+  var URL_FORM = 'https://js.dump.academy/kekstagram';
   var URL_DATA = 'https://js.dump.academy/kekstagram/data';
   var QUEST_STATUS_SUCCESS = 200;
   var QUEST_TIMEOUT = 10000;
@@ -51,7 +51,7 @@
       var xhr = new XMLHttpRequest();
 
       direct(onLoad, onError, xhr);
-      xhr.open('POST', URL);
+      xhr.open('POST', URL_FORM);
       xhr.send(data);
     }
   };

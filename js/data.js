@@ -39,23 +39,17 @@
     }
   };
 
-  var update = function () {
-    removeChildren(pictureList);
-    window.debounce(updatePictures);
-  };
-
   var onSelectionClick = function (evt) {
     sorting = evt.target.value;
-    update();
+    removeChildren(pictureList);
+    window.debounce(updatePictures);
   };
 
   selection.addEventListener('click', onSelectionClick);
 
   selection.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, function () {
-      evt.target.previousElementSibling.checked = 'checked';
-      sorting = evt.target.previousElementSibling.value;
-      update();
+      evt.target.previousElementSibling.click();
     });
   });
 
