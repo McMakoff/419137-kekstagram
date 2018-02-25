@@ -15,7 +15,7 @@
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadClose = uploadOverlay.querySelector('#upload-cancel');
   var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
-  var effect = uploadOverlay.querySelectorAll('input[name=effect]');
+  var effect = uploadOverlay.querySelector('.upload-effect');
   var defaultEffect = uploadOverlay.querySelector('#upload-effect-none');
   var slider = uploadOverlay.querySelector('.upload-effect-level');
   var sliderInput = slider.querySelector('.upload-effect-level-value');
@@ -69,13 +69,10 @@
 
   var effectClickHandler = function (evt) {
     var effectName = evt.target.value;
-
     effectToggle(effectName);
   };
 
-  for (var i = 0; i < effect.length; i++) {
-    effect[i].addEventListener('change', effectClickHandler);
-  }
+  effect.addEventListener('change', effectClickHandler);
 
   // Управление ползунком.
 

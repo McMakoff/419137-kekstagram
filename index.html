@@ -36,7 +36,7 @@
           <button type="button"
                   class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-dec">–
           </button><!--
-          --><input type="text" class="upload-resize-control upload-resize-controls-value" value="55%" readonly title="Image Scale" name="scale"><!--
+          --><input type="text" class="upload-resize-control upload-resize-controls-value" value="55%" readonly title="Image Scale" name="scale" tabindex="-1"><!--
           --><button type="button"
                   class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-inc">+
           </button>
@@ -57,43 +57,43 @@
           </div>
 
           <input type="radio" name="effect" id="upload-effect-none" value="none" checked>
-          <label class="upload-effect-label" for="upload-effect-none">
+          <label class="upload-effect-label" for="upload-effect-none" tabindex="0">
             <div class="upload-effect-preview"></div>
             Оригинал
           </label>
 
           <input type="radio" name="effect" id="upload-effect-chrome" value="chrome">
-          <label class="upload-effect-label upload-effect-label-chrome" for="upload-effect-chrome">
+          <label class="upload-effect-label upload-effect-label-chrome" for="upload-effect-chrome" tabindex="0">
             <div class="upload-effect-preview"></div>
             Хром
           </label>
 
           <input type="radio" name="effect" id="upload-effect-sepia" value="sepia">
-          <label class="upload-effect-label upload-effect-label-sepia" for="upload-effect-sepia">
+          <label class="upload-effect-label upload-effect-label-sepia" for="upload-effect-sepia" tabindex="0">
             <div class="upload-effect-preview"></div>
             Сепия
           </label>
 
           <input type="radio" name="effect" id="upload-effect-marvin" value="marvin">
-          <label class="upload-effect-label upload-effect-label-marvin" for="upload-effect-marvin">
+          <label class="upload-effect-label upload-effect-label-marvin" for="upload-effect-marvin" tabindex="0">
             <div class="upload-effect-preview"></div>
             Марвин
           </label>
 
           <input type="radio" name="effect" id="upload-effect-phobos" value="phobos">
-          <label class="upload-effect-label upload-effect-label-phobos" for="upload-effect-phobos">
+          <label class="upload-effect-label upload-effect-label-phobos" for="upload-effect-phobos" tabindex="0">
             <div class="upload-effect-preview"></div>
             Фобос
           </label>
 
           <input type="radio" name="effect" id="upload-effect-heat" value="heat">
-          <label class="upload-effect-label upload-effect-label-heat" for="upload-effect-heat">
+          <label class="upload-effect-label upload-effect-label-heat" for="upload-effect-heat" tabindex="0">
             <div class="upload-effect-preview"></div>
             Зной
           </label>
         </fieldset>
 
-        <input class="upload-form-hashtags" name="hashtags" placeholder="#хэш-тег" autofocus maxlength="104">
+        <input class="upload-form-hashtags" name="hashtags" placeholder="#хэш-тег" maxlength="104">
 
         <textarea class="upload-form-description" name="description" placeholder="Ваш комментарий..." maxlength="140"></textarea>
 
