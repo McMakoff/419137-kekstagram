@@ -18,6 +18,7 @@
   var uploadClose = uploadOverlay.querySelector('#upload-cancel');
   var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
   var selection = uploadOverlay.querySelector('.upload-effect-controls');
+  var defaultEffect = uploadOverlay.querySelector('#upload-effect-none');
   var slider = uploadOverlay.querySelector('.upload-effect-level');
   var sliderInput = slider.querySelector('.upload-effect-level-value');
   var sliderLine = slider.querySelector('.upload-effect-level-val');
@@ -175,6 +176,7 @@
     uploadFile.value = '';
     resize = FULL_RESIZE;
     effect = ORIGINAL_EFFECT;
+    defaultEffect.checked = 'checked';
     inputDescription.value = '';
     inputHashtag.value = '';
   };

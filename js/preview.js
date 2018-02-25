@@ -31,6 +31,17 @@
 
   pictureList.addEventListener('click', onPictureClick);
 
+  pictureList.addEventListener('keydown', function (evt) {
+    window.util.isEnterEvent(evt, function () {
+      evt.preventDefault();
+      var valueSrc = evt.target.querySelector('img').src;
+      var valueComment = evt.target.querySelector('.picture-comments').textContent;
+      var valueLike = evt.target.querySelector('.picture-likes').textContent;
+
+      galleryOverlay(valueSrc, valueComment, valueLike);
+    });
+  });
+
   var closePopup = function () {
     galleryCover.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
