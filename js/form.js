@@ -6,6 +6,7 @@
   var PREFIX_EFFECT = 'effect-';
   var ORIGINAL_EFFECT = 'none';
   var CONTROL_SIZE = 455;
+  var PIN_SIZE = 18;
   var startPin = (document.documentElement.clientWidth - CONTROL_SIZE) / 2;
   var resize = FULL_RESIZE;
   var effect = ORIGINAL_EFFECT;
@@ -115,6 +116,15 @@
   };
 
   slider.addEventListener('mouseup', onSliderMouseUp);
+
+  pin.addEventListener('keydown', function (evt) {
+    window.util.isLeftEvent(evt, function () {
+      effectScale(pin.offsetLeft - PIN_SIZE);
+    });
+    window.util.isRightEvent(evt, function () {
+      effectScale(pin.offsetLeft + PIN_SIZE);
+    });
+  });
 
   // Изменение размера изображения.
 
