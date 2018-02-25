@@ -13,6 +13,7 @@
 
   var form = document.querySelector('#upload-select-image');
   var uploadFile = document.querySelector('#upload-file');
+  var uploadControl = document.querySelector('.upload-control');
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadClose = uploadOverlay.querySelector('#upload-cancel');
   var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
@@ -188,6 +189,12 @@
 
   uploadFile.addEventListener('change', function () {
     openPopup();
+  });
+
+  uploadControl.addEventListener('keydown', function (evt) {
+    window.util.isEnterEvent(evt, function () {
+      uploadFile.click();
+    });
   });
 
   uploadClose.addEventListener('click', function () {
