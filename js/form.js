@@ -7,7 +7,7 @@
   var ORIGINAL_EFFECT = 'none';
   var CONTROL_SIZE = 455;
   var PIN_SIZE = 18;
-  var startPin = (document.documentElement.clientWidth - CONTROL_SIZE) / 2;
+  var startPin = (document.documentElement.clientWidth - CONTROL_SIZE + PIN_SIZE) / 2;
   var resize = FULL_RESIZE;
   var effect = ORIGINAL_EFFECT;
 
@@ -111,7 +111,7 @@
   });
 
   var onSliderMouseUp = function (evt) {
-    var shift = evt.clientX - startPin;
+    var shift = evt.clientX - startPin + PIN_SIZE; // PIN_SIZE / 2 для FF
 
     effectScale(shift);
   };
