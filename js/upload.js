@@ -22,6 +22,8 @@
       });
 
       reader.readAsDataURL(file);
+    } else {
+      window.warning('Выберите файл в одном из форматов: ' + FILE_TYPES.join(', '));
     }
   });
 })();
