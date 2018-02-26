@@ -218,7 +218,7 @@
   });
 
   form.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(form), closePopup, window.backend.onError);
+    window.backend.upload(new FormData(form), closePopup, window.warning);
     evt.preventDefault();
   });
 })();

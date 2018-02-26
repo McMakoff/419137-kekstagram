@@ -59,5 +59,5 @@
     selection.classList.remove('filters-inactive');
   };
 
-  window.backend.load(onLoad, window.backend.onError);
+  window.backend.load(onLoad, window.warning);
 })();

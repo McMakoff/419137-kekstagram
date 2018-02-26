@@ -5,7 +5,6 @@
   var URL_DATA = 'https://js.dump.academy/kekstagram/data';
   var QUEST_STATUS_SUCCESS = 200;
   var QUEST_TIMEOUT = 10000;
-  var REPORT_TIMEOUT = 3000;
 
   var direct = function (load, error, quest) {
     quest.responseType = 'json';
@@ -30,16 +29,6 @@
   };
 
   window.backend = {
-    onError: function (errorMessage) {
-      var node = document.createElement('div');
-      node.classList.add('error');
-      node.textContent = errorMessage;
-      document.body.insertAdjacentElement('afterbegin', node);
-
-      setTimeout(function () {
-        node.remove();
-      }, REPORT_TIMEOUT);
-    },
     load: function (onLoad, onError) {
       var xhr = new XMLHttpRequest();
 
