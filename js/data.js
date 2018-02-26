@@ -28,6 +28,7 @@
 
   var updatePictures = function () {
     var sorted = pictures.slice(0);
+    removeChildren(pictureList);
 
     if (sorting === 'recommend') {
       window.render(pictures);
@@ -41,7 +42,6 @@
 
   var onSelectionClick = function (evt) {
     sorting = evt.target.value;
-    removeChildren(pictureList);
     window.debounce(updatePictures);
   };
 
