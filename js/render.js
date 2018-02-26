@@ -2,8 +2,6 @@
 // Отрисовка галереи изображений
 
 (function () {
-  var PHOTO_NUMBER = 26;
-
   var pictureTemplate = document.querySelector('#picture-template').content;
   var pictureList = document.querySelector('.pictures');
 
@@ -20,7 +18,7 @@
   window.render = function (data) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < PHOTO_NUMBER; i++) {
+    for (var i = 0; i < data.length; i++) {
       fragment.appendChild(renderPicture(data[i]));
     }
 

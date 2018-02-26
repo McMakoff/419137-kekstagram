@@ -3,11 +3,13 @@
 
 (function () {
   var NEW_HASHTAG = '#';
+  var POSITION_HASHTAG = 0;
+  var SHORT_STROKE = 2;
   var NORM_STROKE = 20;
   var NORM_HASHTAG = 5;
   var CHANCE_ERROR = 0;
 
-  var input = document.querySelector('.upload-form-hashtags');
+  var hashTagField = document.querySelector('.upload-form-hashtags');
 
   var test = {
     hach: CHANCE_ERROR,
@@ -24,7 +26,7 @@
     return unique;
   };
 
-  var controlTag = function (tags) {
+  var checkTag = function (tags) {
     var originals = [];
 
     for (var i = 0; i < tags.length; i++) {
@@ -32,16 +34,18 @@
 
       controlUnique(originals, tag);
 
-      if (tag[0] !== NEW_HASHTAG) {
+      if (tag[POSITION_HASHTAG] !== NEW_HASHTAG) {
         test.hach++;
-      } if (tag.length > NORM_STROKE) {
+      }
+      if (tag.length < SHORT_STROKE || tag.length > NORM_STROKE) {
         test.long++;
       }
     }
 
     if (tags.length > NORM_HASHTAG) {
       test.amount++;
-    } if (tags.length > originals.length) {
+    }
+    if (tags.length > originals.length) {
       test.unique++;
     }
 
@@ -49,14 +53,14 @@
   };
 
   var onInputСhange = function (evt) {
-    controlTag(input.value.toLowerCase().split(/\s{1,}/));
+    checkTag(hashTagField.value.toLowerCase().split(/\s{1,}/));
 
     if (test.hach !== CHANCE_ERROR) {
-      evt.target.setCustomValidity('Хэш-теги должны начинаться с "#".');
+      evt.target.setCustomValidity('Хэш-теги должны начинаться с ' + NEW_HASHTAG);
     } else if (test.long !== CHANCE_ERROR) {
-      evt.target.setCustomValidity('Длинна хэш-тега не более 20 символов.');
+      evt.target.setCustomValidity('Длинна хэш-тега от ' + SHORT_STROKE + ' до ' + NORM_STROKE + ' символов.');
     } else if (test.amount !== CHANCE_ERROR) {
-      evt.target.setCustomValidity('Введите не более 5 хэш-тегов.');
+      evt.target.setCustomValidity('Введите не более ' + NORM_HASHTAG + ' хэш-тегов.');
     } else if (test.unique !== CHANCE_ERROR) {
       evt.target.setCustomValidity('Хэш-теги не должны повторяться.');
     } else {
@@ -71,5 +75,5 @@
     };
   };
 
-  input.addEventListener('change', onInputСhange);
+  hashTagField.addEventListener('change', onInputСhange);
 })();

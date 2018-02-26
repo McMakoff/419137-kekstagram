@@ -22,11 +22,11 @@
   var onPictureClick = function (evt) {
     evt.preventDefault();
 
-    var valueSrc = evt.target.parentElement.querySelector('img').src;
+    var pictureSrc = evt.target.parentElement.querySelector('img').src;
     var amountComment = evt.target.parentElement.querySelector('.picture-comments').textContent;
     var amountLike = evt.target.parentElement.querySelector('.picture-likes').textContent;
 
-    galleryOverlay(valueSrc, amountComment, amountLike);
+    galleryOverlay(pictureSrc, amountComment, amountLike);
   };
 
   pictureList.addEventListener('click', onPictureClick);

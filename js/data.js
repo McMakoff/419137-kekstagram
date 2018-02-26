@@ -2,13 +2,14 @@
 // Сортировка
 
 (function () {
-  var sorting = 'recommend';
+  var DEFAULT_SORT_TYPE = 'recommend';
+  var sortType = DEFAULT_SORT_TYPE;
   var pictures = [];
 
-  var selection = document.querySelector('.filters');
+  var filter = document.querySelector('.filters');
   var pictureList = document.querySelector('.pictures');
 
-  var removeChildren = function (elem) {
+  var removeChildNodes = function (elem) {
     while (elem.lastChild) {
       elem.removeChild(elem.lastChild);
     }
@@ -21,33 +22,32 @@
       random: Math.random()
     };
 
-    rank = rank[sorting];
-
-    return rank;
+    return rank[sortType];
   };
 
   var updatePictures = function () {
     var sorted = pictures.slice(0);
-    removeChildren(pictureList);
 
-    if (sorting === 'recommend') {
-      window.render(pictures);
-    } else {
-      window.render(sorted.sort(function (left, right) {
-        var rankDiff = getRank(right) - getRank(left);
-        return rankDiff;
-      }));
+    removeChildNodes(pictureList);
+    if (sortType === DEFAULT_SORT_TYPE) {
+      return window.render(pictures);
     }
+    sorted = sorted.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      return rankDiff;
+    });
+
+    return window.render(sorted);
   };
 
-  var onSelectionClick = function (evt) {
-    sorting = evt.target.value;
+  var onFilterClick = function (evt) {
+    sortType = evt.target.value;
     window.debounce(updatePictures);
   };
 
-  selection.addEventListener('click', onSelectionClick);
+  filter.addEventListener('click', onFilterClick);
 
-  selection.addEventListener('keydown', function (evt) {
+  filter.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, function () {
       evt.target.previousElementSibling.click();
     });
@@ -56,7 +56,7 @@
   var onLoad = function (data) {
     pictures = data;
     window.render(pictures);
-    selection.classList.remove('filters-inactive');
+    filter.classList.remove('filters-inactive');
   };
 
   window.backend.load(onLoad, window.warning);

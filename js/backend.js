@@ -1,46 +1,45 @@
 'use strict';
 
 (function () {
-  var URL_FORM = 'https://js.dump.academy/kekstagram';
-  var URL_DATA = 'https://js.dump.academy/kekstagram/data';
-  var QUEST_STATUS_SUCCESS = 200;
-  var QUEST_TIMEOUT = 10000;
+  var URL_LOAD_DATA = 'https://js.dump.academy/kekstagram/data';
+  var URL_UPLOAD_DATA = 'https://js.dump.academy/kekstagram';
+  var HTTP_STATUS_SUCCESS = 200;
+  var TIMEOUT = 10000;
 
-  var direct = function (load, error, quest) {
-    quest.responseType = 'json';
+  var setConfig = function (loadHandler, errorHandler) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
 
-    quest.addEventListener('load', function () {
-      if (quest.status === QUEST_STATUS_SUCCESS) {
-        load(quest.response);
-      } else {
-        error('Статус ответа: ' + quest.status + ' ' + quest.statusText);
+    xhr.addEventListener('load', function () {
+      if (xhr.status === HTTP_STATUS_SUCCESS) {
+        return loadHandler(xhr.response);
       }
+      return errorHandler('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
     });
 
-    quest.addEventListener('error', function () {
-      error('Произошла ошибка соединения');
+    xhr.addEventListener('error', function () {
+      errorHandler('Произошла ошибка соединения');
     });
 
-    quest.addEventListener('timeout', function () {
-      error('Запрос не успел выполниться за ' + quest.timeout + 'мс');
+    xhr.addEventListener('timeout', function () {
+      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    quest.timeout = QUEST_TIMEOUT;
+    xhr.timeout = TIMEOUT;
+    return xhr;
   };
 
   window.backend = {
     load: function (onLoad, onError) {
-      var xhr = new XMLHttpRequest();
+      var xhr = setConfig(onLoad, onError);
 
-      direct(onLoad, onError, xhr);
-      xhr.open('GET', URL_DATA);
+      xhr.open('GET', URL_LOAD_DATA);
       xhr.send();
     },
     upload: function (data, onLoad, onError) {
-      var xhr = new XMLHttpRequest();
+      var xhr = setConfig(onLoad, onError);
 
-      direct(onLoad, onError, xhr);
-      xhr.open('POST', URL_FORM);
+      xhr.open('POST', URL_UPLOAD_DATA);
       xhr.send(data);
     }
   };

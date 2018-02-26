@@ -12,9 +12,9 @@
   var effect = ORIGINAL_EFFECT;
 
   var form = document.querySelector('#upload-select-image');
-  var uploadFile = document.querySelector('#upload-file');
-  var uploadControl = document.querySelector('.upload-control');
-  var uploadOverlay = document.querySelector('.upload-overlay');
+  var uploadFile = form.querySelector('#upload-file');
+  var uploadControl = form.querySelector('.upload-control');
+  var uploadOverlay = form.querySelector('.upload-overlay');
   var uploadClose = uploadOverlay.querySelector('#upload-cancel');
   var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
   var selection = uploadOverlay.querySelector('.upload-effect-controls');
@@ -23,11 +23,11 @@
   var sliderInput = slider.querySelector('.upload-effect-level-value');
   var sliderLine = slider.querySelector('.upload-effect-level-val');
   var pin = slider.querySelector('.upload-effect-level-pin');
-  var plus = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
-  var minus = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
+  var plusBtn = uploadOverlay.querySelector('.upload-resize-controls-button-inc');
+  var minusBtn = uploadOverlay.querySelector('.upload-resize-controls-button-dec');
   var resizeValue = uploadOverlay.querySelector('.upload-resize-controls-value');
-  var inputHashtag = uploadOverlay.querySelector('.upload-form-hashtags');
-  var inputDescription = uploadOverlay.querySelector('.upload-form-description');
+  var hashTagField = uploadOverlay.querySelector('.upload-form-hashtags');
+  var descriptionField = uploadOverlay.querySelector('.upload-form-description');
 
   // Применение эффектов к изображению.
 
@@ -59,9 +59,9 @@
     imagePreview.classList.remove(imagePreview.className.split(/ /).pop());
 
     if (effect === ORIGINAL_EFFECT) {
-      slider.hidden = 'hidden';
+      slider.classList.add('hidden');
     } else {
-      slider.removeAttribute('hidden');
+      slider.classList.remove('hidden');
     }
 
     imagePreview.classList.add(PREFIX_EFFECT + effect);
@@ -111,7 +111,7 @@
   });
 
   var onSliderMouseUp = function (evt) {
-    var shift = evt.clientX - startPin + PIN_SIZE; // PIN_SIZE / 2 для FF
+    var shift = evt.clientX - startPin + PIN_SIZE;
 
     effectScale(shift);
   };
@@ -142,17 +142,17 @@
     resizeValue.value = (resize * 100) + '%';
   };
 
-  plus.addEventListener('click', function () {
+  plusBtn.addEventListener('click', function () {
     applyResize(FULL_RESIZE);
   });
 
-  minus.addEventListener('click', function () {
+  minusBtn.addEventListener('click', function () {
     applyResize(-FULL_RESIZE);
   });
 
   // Открытие и закрытие формы редактирования изображения.
 
-  var prevent = function (element) {
+  var catchEvent = function (element) {
     element.addEventListener('keydown', function (evt) {
       window.util.isEscEvent(evt, function () {
         evt.stopPropagation();
@@ -168,17 +168,17 @@
   var defaultSetup = function () {
     effectToggle();
     applyResize(FULL_RESIZE);
-    prevent(inputDescription);
-    prevent(inputHashtag);
+    catchEvent(descriptionField);
+    catchEvent(hashTagField);
   };
 
   var resetSetup = function () {
     uploadFile.value = '';
     resize = FULL_RESIZE;
     effect = ORIGINAL_EFFECT;
-    defaultEffect.checked = 'checked';
-    inputDescription.value = '';
-    inputHashtag.value = '';
+    defaultEffect.checked = true;
+    descriptionField.value = '';
+    hashTagField.value = '';
   };
 
   var openPopup = function () {

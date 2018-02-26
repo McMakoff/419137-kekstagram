@@ -7,24 +7,24 @@
   var RIGHT_ARROW = 39;
 
   window.util = {
-    isEscEvent: function (evt, action) {
+    isEscEvent: function (evt, cb) {
       if (evt.keyCode === ESC_KEYCODE) {
-        action();
+        cb();
       }
     },
-    isEnterEvent: function (evt, action) {
+    isEnterEvent: function (evt, cb) {
       if (evt.keyCode === ENTER_KEYCODE) {
-        action();
+        cb();
       }
     },
-    isLeftEvent: function (evt, action) {
+    isLeftEvent: function (evt, cb) {
       if (evt.keyCode === LEFT_ARROW) {
-        action();
+        cb();
       }
     },
-    isRightEvent: function (evt, action) {
+    isRightEvent: function (evt, cb) {
       if (evt.keyCode === RIGHT_ARROW) {
-        action();
+        cb();
       }
     }
   };
