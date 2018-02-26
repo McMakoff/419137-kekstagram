@@ -7,7 +7,7 @@
   var NORM_HASHTAG = 5;
   var CHANCE_ERROR = 0;
 
-  var inputHashtag = document.querySelector('.upload-form-hashtags');
+  var input = document.querySelector('.upload-form-hashtags');
 
   var test = {
     hach: CHANCE_ERROR,
@@ -24,32 +24,32 @@
     return unique;
   };
 
-  var controlTag = function (tag) {
+  var controlTag = function (tags) {
     var originals = [];
 
-    for (var i = 0; i < tag.length; i++) {
-      var str = tag[i];
+    for (var i = 0; i < tags.length; i++) {
+      var tag = tags[i];
 
-      controlUnique(originals, str);
+      controlUnique(originals, tag);
 
-      if (str[0] !== NEW_HASHTAG) {
+      if (tag[0] !== NEW_HASHTAG) {
         test.hach++;
-      } if (str.length > NORM_STROKE) {
+      } if (tag.length > NORM_STROKE) {
         test.long++;
       }
     }
 
-    if (tag.length > NORM_HASHTAG) {
+    if (tags.length > NORM_HASHTAG) {
       test.amount++;
-    } if (tag.length > originals.length) {
+    } if (tags.length > originals.length) {
       test.unique++;
     }
 
     return test;
   };
 
-  var inputHashtagСhangeHandler = function (evt) {
-    controlTag(inputHashtag.value.toLowerCase().split(/\s{1,5}/));
+  var onInputСhange = function (evt) {
+    controlTag(input.value.toLowerCase().split(/\s{1,}/));
 
     if (test.hach !== CHANCE_ERROR) {
       evt.target.setCustomValidity('Хэш-теги должны начинаться с "#".');
@@ -71,5 +71,5 @@
     };
   };
 
-  inputHashtag.addEventListener('change', inputHashtagСhangeHandler);
+  input.addEventListener('change', onInputСhange);
 })();

@@ -9,13 +9,15 @@
   var PIN_SIZE = 18;
   var startPin = (document.documentElement.clientWidth - CONTROL_SIZE) / 2;
   var resize = FULL_RESIZE;
+  var effect = ORIGINAL_EFFECT;
 
   var form = document.querySelector('#upload-select-image');
   var uploadFile = document.querySelector('#upload-file');
+  var uploadControl = document.querySelector('.upload-control');
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadClose = uploadOverlay.querySelector('#upload-cancel');
   var imagePreview = uploadOverlay.querySelector('.effect-image-preview');
-  var effect = uploadOverlay.querySelectorAll('input[name=effect]');
+  var selection = uploadOverlay.querySelector('.upload-effect-controls');
   var defaultEffect = uploadOverlay.querySelector('#upload-effect-none');
   var slider = uploadOverlay.querySelector('.upload-effect-level');
   var sliderInput = slider.querySelector('.upload-effect-level-value');
@@ -30,16 +32,15 @@
   // Применение эффектов к изображению.
 
   var effectScale = function (extent) {
-    var name = imagePreview.className.split(/ /).pop();
     var scale = (extent / CONTROL_SIZE).toFixed(2);
 
     var filter = {
-      'effect-none': 'none',
-      'effect-chrome': 'grayscale(' + scale + ')',
-      'effect-sepia': 'sepia(' + scale + ')',
-      'effect-marvin': 'invert(' + scale * 100 + '%)',
-      'effect-phobos': 'blur(' + scale * 3 + 'px)',
-      'effect-heat': 'brightness(' + scale * 3 + ')'
+      'none': 'none',
+      'chrome': 'grayscale(' + scale + ')',
+      'sepia': 'sepia(' + scale + ')',
+      'marvin': 'invert(' + scale * 100 + '%)',
+      'phobos': 'blur(' + scale * 3 + 'px)',
+      'heat': 'brightness(' + scale * 3 + ')'
     };
 
     if (scale < 0) {
@@ -48,34 +49,39 @@
       scale = 1;
     }
 
-    imagePreview.style.filter = filter[name];
+    imagePreview.style.filter = filter[effect];
     sliderInput.value = scale * 100;
     sliderLine.style.width = sliderInput.value + '%';
     pin.style.left = sliderInput.value + '%';
   };
 
-  var effectToggle = function (name) {
+  var effectToggle = function () {
     imagePreview.classList.remove(imagePreview.className.split(/ /).pop());
 
-    if (name === ORIGINAL_EFFECT) {
+    if (effect === ORIGINAL_EFFECT) {
       slider.hidden = 'hidden';
     } else {
       slider.removeAttribute('hidden');
     }
 
-    imagePreview.classList.add(PREFIX_EFFECT + name);
+    imagePreview.classList.add(PREFIX_EFFECT + effect);
     effectScale(CONTROL_SIZE);
   };
 
-  var effectClickHandler = function (evt) {
-    var effectName = evt.target.value;
-
-    effectToggle(effectName);
+  var onSelectionClick = function (evt) {
+    effect = evt.target.value;
+    effectToggle();
   };
 
-  for (var i = 0; i < effect.length; i++) {
-    effect[i].addEventListener('change', effectClickHandler);
-  }
+  selection.addEventListener('change', onSelectionClick);
+
+  var onSelectionEnterPress = function () {
+    selection.addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, function () {
+        evt.target.previousElementSibling.click();
+      });
+    });
+  };
 
   // Управление ползунком.
 
@@ -104,13 +110,22 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  var sliderMouseUpHandler = function (evt) {
-    var shift = evt.clientX - startPin + PIN_SIZE / 2;
+  var onSliderMouseUp = function (evt) {
+    var shift = evt.clientX - startPin;
 
     effectScale(shift);
   };
 
-  slider.addEventListener('mouseup', sliderMouseUpHandler);
+  slider.addEventListener('mouseup', onSliderMouseUp);
+
+  pin.addEventListener('keydown', function (evt) {
+    window.util.isLeftEvent(evt, function () {
+      effectScale(pin.offsetLeft - PIN_SIZE);
+    });
+    window.util.isRightEvent(evt, function () {
+      effectScale(pin.offsetLeft + PIN_SIZE);
+    });
+  });
 
   // Изменение размера изображения.
 
@@ -143,10 +158,15 @@
         evt.stopPropagation();
       });
     });
+    element.addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, function () {
+        evt.preventDefault();
+      });
+    });
   };
 
   var defaultSetup = function () {
-    effectToggle(ORIGINAL_EFFECT);
+    effectToggle();
     applyResize(FULL_RESIZE);
     prevent(inputDescription);
     prevent(inputHashtag);
@@ -155,21 +175,24 @@
   var resetSetup = function () {
     uploadFile.value = '';
     resize = FULL_RESIZE;
+    effect = ORIGINAL_EFFECT;
+    defaultEffect.checked = 'checked';
     inputDescription.value = '';
     inputHashtag.value = '';
-    defaultEffect.checked = 'checked';
   };
 
   var openPopup = function () {
     defaultSetup();
     uploadOverlay.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
+    document.addEventListener('keydown', onSelectionEnterPress);
   };
 
   var closePopup = function () {
     resetSetup();
     uploadOverlay.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
+    document.removeEventListener('keydown', onSelectionEnterPress);
   };
 
   var onPopupEscPress = function (evt) {
@@ -178,6 +201,12 @@
 
   uploadFile.addEventListener('change', function () {
     openPopup();
+  });
+
+  uploadControl.addEventListener('keydown', function (evt) {
+    window.util.isEnterEvent(evt, function () {
+      uploadFile.click();
+    });
   });
 
   uploadClose.addEventListener('click', function () {
@@ -189,7 +218,7 @@
   });
 
   form.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(form), closePopup, window.backend.errorHandler);
+    window.backend.upload(new FormData(form), closePopup, window.backend.onError);
     evt.preventDefault();
   });
 })();

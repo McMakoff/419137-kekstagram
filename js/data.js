@@ -39,19 +39,25 @@
     }
   };
 
-  var selectionClickHandler = function (evt) {
+  var onSelectionClick = function (evt) {
     sorting = evt.target.value;
     removeChildren(pictureList);
     window.debounce(updatePictures);
   };
 
-  selection.addEventListener('click', selectionClickHandler);
+  selection.addEventListener('click', onSelectionClick);
 
-  var loadHandler = function (data) {
+  selection.addEventListener('keydown', function (evt) {
+    window.util.isEnterEvent(evt, function () {
+      evt.target.previousElementSibling.click();
+    });
+  });
+
+  var onLoad = function (data) {
     pictures = data;
     window.render(pictures);
     selection.classList.remove('filters-inactive');
   };
 
-  window.backend.load(loadHandler, window.backend.errorHandler);
+  window.backend.load(onLoad, window.backend.onError);
 })();
