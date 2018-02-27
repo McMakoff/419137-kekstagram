@@ -18,35 +18,21 @@
     long: CHANCE_ERROR
   };
 
-  var controlUnique = function (unique, stroke) {
-    if (unique.indexOf(stroke) === -1) {
-      unique.push(stroke);
-    }
-
-    return unique;
-  };
-
   var checkTag = function (tags) {
-    var originals = [];
-
-    for (var i = 0; i < tags.length; i++) {
-      var tag = tags[i];
-
-      controlUnique(originals, tag);
-
-      if (tag[POSITION_HASHTAG] !== NEW_HASHTAG) {
+    tags.forEach(function (stroke) {
+      if (tags.indexOf(stroke) !== -1) {
+        test.unique++;
+      }
+      if (stroke[POSITION_HASHTAG] !== NEW_HASHTAG) {
         test.hach++;
       }
-      if (tag.length < SHORT_STROKE || tag.length > NORM_STROKE) {
+      if (stroke.length < SHORT_STROKE || stroke.length > NORM_STROKE) {
         test.long++;
       }
-    }
+    });
 
     if (tags.length > NORM_HASHTAG) {
       test.amount++;
-    }
-    if (tags.length > originals.length) {
-      test.unique++;
     }
 
     return test;
