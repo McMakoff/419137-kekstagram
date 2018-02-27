@@ -888,9 +888,9 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
 
   font-size: 30px;
   text-align: center;
-  color: #ece9aa;
+  color: #701419;
 
-  background-color: #a32417;
+  background-color: #ffffea;
   transform: translate(-50%, -50%);
 }
 
