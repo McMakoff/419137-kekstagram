@@ -158,11 +158,6 @@
         evt.stopPropagation();
       });
     });
-    element.addEventListener('keydown', function (evt) {
-      window.util.isEnterEvent(evt, function () {
-        evt.preventDefault();
-      });
-    });
   };
 
   var defaultSetup = function () {
