@@ -33,8 +33,7 @@
       return window.render(pictures);
     }
     sorted = sorted.sort(function (left, right) {
-      var rankDiff = getRank(right) - getRank(left);
-      return rankDiff;
+      return getRank(right) - getRank(left);
     });
 
     return window.render(sorted);

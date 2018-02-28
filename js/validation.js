@@ -7,6 +7,7 @@
   var SHORT_STROKE = 2;
   var NORM_STROKE = 20;
   var NORM_HASHTAG = 5;
+  var separator = /\s{1,}/;
   var test = true;
 
   var hashTagField = document.querySelector('.upload-form-hashtags');
@@ -44,7 +45,7 @@
   };
 
   var onInputСhange = function (evt) {
-    checkTag(hashTagField.value.toLowerCase().split(/\s{1,}/));
+    checkTag(hashTagField.value.toLowerCase().split(separator));
 
     if (test !== true) {
       evt.target.setCustomValidity('Неверный формат хэш-тегов');
