@@ -44,11 +44,13 @@
     window.debounce(updatePictures);
   };
 
-  filter.addEventListener('click', onFilterClick);
+  filter.addEventListener('change', onFilterClick);
 
   filter.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, function () {
-      evt.target.previousElementSibling.click();
+      if (evt.target.previousElementSibling) {
+        evt.target.previousElementSibling.click();
+      }
     });
   });
 
