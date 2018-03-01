@@ -164,7 +164,6 @@
     effectToggle();
     applyResize(FULL_RESIZE);
     catchEvent(descriptionField);
-    catchEvent(hashTagField);
   };
 
   var resetSetup = function () {
